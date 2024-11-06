@@ -1,0 +1,67 @@
+<section id="all-stuff">
+    <button id="chrome-web-comments-panel-button">
+        <div id="zero-comments">Оставьте Ваш комментарий!</div>
+        <div id="comments-avail">Комментарии: <span id="msgs-counter"></span></div>
+    </button>
+
+    <section id="chrome-web-comments-panel">
+        <div id="chrome-web-comments-panel-resizer"></div>
+        <div id="panel-payload">
+            <section id = "subscribe">
+                <button id="subscrBtn" disabled=true>Подписаться</button>
+                <button id="unsubscrBtn" disabled=true>Отписаться</button>
+            </section>
+            <button id="chrome-web-comments-panel-close">x</button>
+            <form id="chrome-web-comments-form">
+                <label>
+                    <input name="name" id="cwc_user" placeholder="Любое имя или ник" required disabled />
+                </label>
+                <a href="/assets/rules.html" id="rules-link" class="chrome-web-comments-item-footer">Правила</a>
+                <label>
+                    <textarea name="comment" placeholder="Ваш комментарий" required ></textarea>
+                </label>
+                <label>
+                    <button name="add">Отправить</button>
+                </label>
+            </form>
+            <div id="cwc-error"></div>
+            <div id="chrome-web-comments-lists"></div>
+        </div>
+    </section>
+
+    <template id="template-comment-wrapper">
+       <div class="chrome-web-comments-item-wrap">
+            <div class="chrome-web-comments-item">
+                <div class="chrome-web-comments-item-footer">
+                    <div>
+                        <span class="chrome-web-comments-item-user"></span>
+                        <span class="chrome-web-comments-item-date"></span>
+                    </div>
+                    <div class="chrome-web-comments-item-titlebar">
+                        <span class="report-button" title="Пожаловаться на сообщение" >&#9888;</span>
+                        <span class="modifiable">
+                            <span class="chrome-web-comments-item-editBtn" title="Редактировать сообщение">&#128393;</span>
+                            <span class="chrome-web-comments-item-deleteBtn" title="Удалить сообщение">&#10060;</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="chrome-web-comments-item-comment"></div>
+                <div class="chrome-web-comments-item-answear">
+                    ответить
+                </div>
+                <form class="cwc-answear-form">
+                    <input name="parent_id" type="hidden"/>
+                    <input name="root_id" type="hidden"/>
+                    <textarea name="comment" required placeholder="Ваш ответ"></textarea>
+                    <div class="cwc-answear-form-buttons">
+                        <button class="chrome-web-comments-item-sendAnswerBtn">Отправить</button>
+                        <button class="chrome-web-comments-item-saveEditedBtn">Сохранить</button>
+                        <button class="chrome-web-comments-item-declineBtn" type="button">Отмена</button>
+                    </div>
+                </form>
+            </div>
+            <div class="cwc-child-list" data-list-id="`+ args.msg_id +`"></div>
+        </div>
+    </template>
+
+</section>

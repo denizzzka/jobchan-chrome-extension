@@ -1,0 +1,257 @@
+/*
+TODO: rename chrome-web-comments-* to usual short names
+*/
+
+#chrome-web-comments-panel{
+    padding-right: 1.9em;
+    position: fixed;
+    right: -100%;
+    top: 0px;
+    width: 40%;
+    height: 100%;
+    visibility: hidden;
+    transition: .3s;
+    z-index: 9999999999999;
+}
+
+#chrome-web-comments-panel.active{
+    right: 0;
+    visibility: visible;
+    transition: .3s;
+}
+
+#chrome-web-comments-panel-resizer{
+    width: 0.6em;
+    float: left;
+    cursor: ew-resize;
+    user-select: none;
+    background-color: transparent;
+    height: 100%;
+}
+
+#panel-payload{
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    padding: 20px;
+    padding-top: 10px;
+    padding-left: 0.7em;
+    border-right: solid 1px #ccc;
+    box-shadow: 0px 0px 10px 5px #ccc;
+}
+
+#chrome-web-comments-panel-button{
+    position: fixed;
+    top: 25%;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+    right: 0px;
+    cursor: pointer;
+    padding: 0.6em;
+    border: solid 1px #ccc;
+    font-size: large;
+    z-index: 9999999999998;
+}
+
+#chrome-web-comments-panel-close{
+    background: none;
+    border: none;
+    font-size: 18pt;
+    position: absolute;
+    right: 6px;
+    top: 0px;
+    color: #f00;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+#chrome-web-comments-panel-close:hover {
+    color: #ccc;
+    transform: rotate(360deg);
+}
+
+#chrome-web-comments-form label input[name="name"]{
+    margin: 0.7em;
+    padding: 0.2em;
+    border: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+}
+
+#chrome-web-comments-form label textarea[name="comment"]{
+    width: 100%;
+    height: 6em;
+    resize: vertical;
+    border: solid 1px #ccc;
+}
+
+#chrome-web-comments-form label button[name="add"]{
+    margin: auto;
+    left: 0;
+    right: 0;
+    width: 140px;
+    height: 30px;
+    border: solid 1px #ccc;
+    cursor: pointer;
+}
+
+#rules-link {
+    float: right;
+    height: 2.2em;
+    align-items: end;
+}
+
+#chrome-web-comments-lists{
+    height: 75%;
+    overflow: auto;
+    padding-right: 0.5em;
+}
+
+.chrome-web-comments-item-wrap{
+    position: relative;
+}
+
+.chrome-web-comments-item{
+    padding: 0.3em 0.7em;
+    margin: 0.4em;
+    transition: .3s;
+    background: #f1f1f1;
+    position: relative;
+    border-radius: 10px 10px 10px 0px;
+}
+
+.cwc-my-comment-true{
+    /* right: -5%; */
+    background: #e3fee0;
+    border-radius: 10px 10px 0px 10px;
+}
+
+.chrome-web-comments-item-user{
+    color: #7f7f7f;
+    font-size: 14pt;
+    text-align: left;
+}
+
+.chrome-web-comments-item-footer{
+    display: flex;
+    color: #ccc;
+    justify-content: space-between;
+}
+
+.chrome-web-comments-item-titlebar {
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    font-size: small;
+}
+
+.chrome-web-comments-item-date{
+    padding: 0.5em;
+    color: #ccc;
+    font-size: 11px;
+    vertical-align: text-top;
+}
+
+.chrome-web-comments-item-comment{
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+
+.chrome-web-comments-item-answear{
+    text-align: right;
+    color: #009fff;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    position: relative;
+    bottom: 5px;
+}
+
+.cwc-answear-form{
+    display: none;
+    margin-top: 25px;
+}
+
+.cwc-answear-form textarea{
+    width: 100%;
+    height: 45px;
+    resize: vertical;
+    outline: none;
+    border: solid 1px #ccc;
+}
+
+.cwc-answear-form-buttons{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.4em;
+}
+
+.cwc-child-list{
+    margin-left: 35px;
+}
+
+.cwc-child-list .chrome-web-comments-item:not(.cwc-my-comment-true){
+    border-radius: 0px 10px 10px 10px;
+}
+
+.cwc-answear-user{
+    color: #00a9fb;
+    cursor: pointer;
+}
+
+.chrome-web-comments-item.active{
+    background: #feffc6;
+}
+
+#chrome-web-comments-form label{
+    position: relative;
+}
+
+#cwc-error{
+    text-align: center;
+    padding: 0.3em;
+    height: 1.5em;
+    color: #f00;
+}
+
+body
+{
+    max-width: 100%;
+    background-color: gainsboro;
+}
+
+h1
+{
+    text-align: center;
+    font-size: 1.5em;
+}
+
+ul
+{
+    list-style: none;
+    user-select: none;
+}
+
+.del_or_not
+{
+    cursor: pointer;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.7em;
+}
+
+.subscription-link.have-unread
+{
+    font-weight: bold;
+}
+
+.subscription-link.removed
+{
+    text-decoration: line-through;
+}
+
+.buttons
+{
+    text-align: center;
+}

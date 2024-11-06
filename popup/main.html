@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf-8">
+    <head>
+        <title>title title title</title>
+        <link rel="stylesheet" href="/assets/style.css">
+    </head>
+    <body>
+        <h1>Подписки</h1>
+        <section id="main_section">
+            <div>
+                <ul id="subscriptionsList">
+                    <template id="subscriptionItemTpl">
+                        <li class="subscriptionItem">
+                            <nobr>
+                                <span class="del_or_not">
+                                    <span class="approve">[ ]</span>
+                                    <span class="decline" hidden>[&cross;]</span>
+                                </span>
+                                <span class="subscription-link">
+                                    <span class="unread" title="Количество непрочитанных сообщений">
+                                        (<span class="unread-val"></span>)
+                                    </span>
+                                    <a class="page-link" target="_blank"></a>
+                                </span>
+                            </nobr>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </section>
+        <section class="buttons">
+            <button id="unsubBtn" disabled>Отписаться от отмеченных крестиком</button>
+        </section>
+        <script type="text/javascript" src="/assets/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="/assets/libs/jquery-ui.js"></script>
+        <script type="text/javascript" src="/assets/js/storage.js"></script>
+        <script type="text/javascript" src="popup.js"></script>
+    </body>
+</html>

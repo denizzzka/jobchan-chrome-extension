@@ -1,0 +1,49 @@
+{
+	"manifest_version": 3,
+	"name": "JobChan: Обсуждение вакансий",
+	"description": "Комментарии к вакансиям на сайтах поиска работы",
+	"version": "0.3",
+	"homepage_url": "https://t.me/jobchan_extension",
+	"icons": {
+		"48": "assets/icons/48x48_bw.png"
+	},
+	"host_permissions": [
+		"https://career.habr.com/vacancies/*",
+		"https://*.hh.ru/vacancy/*",
+		"https://*.rabota.ru/vacancy/*",
+		"https://*.zarplata.ru/vacancy/*"
+	],
+	"permissions": [ "alarms", "storage" ],
+	"action": {
+		"default_popup": "popup/main.html"
+	},
+	"background": {
+		"service_worker": "assets/js/background.js"
+	},
+    "web_accessible_resources": [
+        {
+            "resources": [
+				"panel/panel.html",
+				"assets/style.css",
+				"assets/rules.html"
+			],
+            "matches": ["<all_urls>"]
+        }
+    ],
+	"content_scripts": [{
+		"matches": [
+			"https://career.habr.com/vacancies/*",
+			"https://*.hh.ru/vacancy/*",
+			"https://*.rabota.ru/vacancy/*",
+			"https://*.zarplata.ru/vacancy/*"
+		 ],
+		"js": [
+			"assets/libs/jquery.min.js",
+			"assets/libs/jquery-ui.js",
+			"assets/js/fetch.js",
+			"assets/js/storage.js",
+			"panel/content.js"
+		],
+		"run_at": "document_start"
+	}]
+}
