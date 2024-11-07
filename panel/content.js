@@ -385,6 +385,8 @@ const app = {
 				}
 
 				if (response?.error === undefined) {
+					subscriptions.markAsReadIfSubscribed(document.page_id, response.latest_activity_id);
+
 					msg_wrap.querySelector('.chrome-web-comments-item-comment')
 						.innerHTML = response.comment;
 
