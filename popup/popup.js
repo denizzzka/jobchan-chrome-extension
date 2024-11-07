@@ -24,6 +24,11 @@ function addSubsList(page_id, url, title, newCount, isRemoved)
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    chrome.action.getBadgeText({}, (t) => {
+        if(t == " ! ")
+            $('#cwc-error').show();
+    });
+
     document.toUnsubscribe = [];
 
     const s = await subscriptions.getSortedSubscriptions();

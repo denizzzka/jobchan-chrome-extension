@@ -50,12 +50,15 @@ const app = {
 			const page_ids = (await subscriptions.bySub())
 				.map((a) => a.page_id);
 
-			const stats = await requester.request(
+			const stats = await app.request(
 				{ action: 'getStats' },
 				{
 					"page_ids": page_ids
 				}
 			);
+
+			if(stats === undefined)
+				return; // connection error
 
 			// Set next update timepoint
 			app.setSubsUpdateAlarm(
@@ -98,6 +101,25 @@ const app = {
 				resolve( data[ key ] );
 			});
 		});
+	},
+
+	request: async (get_args, post_args) => {
+		let r
+
+		try
+		{
+			r = await requester.request(get_args, post_args);
+		}
+		catch(err)
+		{
+			console.log("Background task", err);
+
+			chrome.action.setBadgeText({
+				text: " ! "
+			});
+		}
+
+		return r;
 	}
 };
 
