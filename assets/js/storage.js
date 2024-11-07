@@ -4,7 +4,11 @@ class SubscriptionsStorage {
 
 		const r = await chrome.storage.local.get(key).then((r) => r?.[key]);
 
-		return r === undefined ? [] : r;
+		if(r === undefined)
+			return [];
+
+		// TODO: Иногда почему-то null встречаются - разобраться!
+		return r.filter((e) => e != null);
 	}
 
 	async #insertToSubsArray(page_id) {
