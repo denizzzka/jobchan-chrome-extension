@@ -576,8 +576,10 @@ const app = {
 				app.showErrorBanner(data.error);
 
 			return data;
-		} catch {
-			console.log('Request error');
+		}
+		catch(err)
+		{
+			console.error("Нет связи с сервером?", err);
 		}
 	}
 }
