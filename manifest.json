@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "JobChan: Обсуждение вакансий",
 	"description": "Обсуждение вакансий на сайтах поиска работы",
-	"version": "0.3",
+	"version": "0.4",
 	"homepage_url": "https://t.me/jobchan_extension",
 	"icons": {
 		"48": "assets/icons/48x48_bw.png"
