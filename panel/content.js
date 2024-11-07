@@ -579,7 +579,7 @@ const app = {
 		}
 		catch(err)
 		{
-			console.error("Нет связи с сервером?", err);
+			console.log("Нет связи с сервером?", err);
 		}
 	}
 }
