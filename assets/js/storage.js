@@ -107,7 +107,10 @@ class SubscriptionsStorage {
 		const r = await this.#getByPageId(page_id);
 
 		if(r !== undefined)
+		{
 			r.latest_activity_counter = latest_activity_counter;
+			r.isRemoved = false;
+		}
 
 		await this.#setByPageId(page_id, r);
 	}
