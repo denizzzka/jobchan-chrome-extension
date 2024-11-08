@@ -46,7 +46,10 @@ const app = {
 
 	actions: () => {
 
-		chrome.alarms.onAlarm.addListener( async(a) => {
+		chrome.alarms.onAlarm.addListener( async(alarm_name) => {
+			if(alarm_name.name != subsAlarmName)
+				return;
+
 			const page_ids = (await subscriptions.bySub())
 				.map((a) => a.page_id);
 
