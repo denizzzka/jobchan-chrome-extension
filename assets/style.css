@@ -241,6 +241,13 @@ ul
     font-size: 1.7em;
 }
 
+#panel-subscribe
+{
+    display: flex;
+    gap: 0.6em;
+    flex-wrap: wrap;
+}
+
 .subscription-link.have-unread
 {
     font-weight: bold;

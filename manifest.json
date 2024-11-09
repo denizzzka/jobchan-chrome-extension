@@ -25,6 +25,7 @@
             "resources": [
 				"panel/panel.html",
 				"assets/style.css",
+				"popup/main.html",
 				"assets/rules.html"
 			],
             "matches": ["<all_urls>"]

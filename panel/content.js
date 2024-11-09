@@ -215,11 +215,16 @@ const app = {
 			`<link rel="stylesheet" href="`+chrome.runtime.getURL("assets/style.css")+`">`
 		);
 
-		$(shadow).find('#rules-link').attr("href", chrome.runtime.getURL("assets/rules.html"));
+		$(shadow).find('.relative-href').each(function(i, e) {
+			const base = $(e).attr("href");
+			$(e).attr("href", chrome.runtime.getURL(base));
+		});
 
 		app.updateCounterButtonText(0);
 
 		app.setProperSubscribedState();
+
+		app.displayUnreadSubs();
 
 		chrome.storage.local.get('cwc_user', data => $(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' ) );
 
@@ -250,6 +255,15 @@ const app = {
 			rfind('#zero-comments').show();
 			rfind('#comments-avail').hide();
 		}
+	},
+
+	displayUnreadSubs: () => {
+		subscriptions.getUnreadCount().then((unread) => {
+			if(unread > 0)
+				rfind('#unreadNum').text(unread);
+			else
+				rfind('#haveUnread').hide();
+		});
 	},
 
 	showAnswearForm: function(){

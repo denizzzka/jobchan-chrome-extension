@@ -7,16 +7,24 @@
     <section id="chrome-web-comments-panel">
         <div id="chrome-web-comments-panel-resizer"></div>
         <div id="panel-payload">
-            <section id = "subscribe">
+            <section id = "panel-subscribe">
                 <button id="subscrBtn" disabled=true>Подписаться</button>
                 <button id="unsubscrBtn" disabled=true>Отписаться</button>
+                <nobr>
+                    <a href="/popup/main.html" class="relative-href">Подписки</a>
+                    <span id="haveUnread" title="Количество непрочитанных подписок">
+                        <b>
+                            (<span id="unreadNum">123</span>)
+                        </b>
+                    </span>
+                </nobr>
             </section>
             <button id="chrome-web-comments-panel-close">x</button>
             <form id="chrome-web-comments-form">
                 <label>
                     <input name="name" id="cwc_user" placeholder="Любое имя или ник" required disabled />
                 </label>
-                <a href="/assets/rules.html" id="rules-link" class="chrome-web-comments-item-footer">Правила</a>
+                <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
                 <label>
                     <textarea name="comment" placeholder="Ваш комментарий" required ></textarea>
                 </label>
