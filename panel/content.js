@@ -155,6 +155,8 @@ const app = {
 	},
 
 	setProperSubscribedState: async () => {
+		app.displayUnreadSubs();
+
 		const s = await subscriptions.isSubscribed(document.page_id);
 
 		rfind('#subscrBtn').prop('disabled', s == true);
@@ -224,8 +226,6 @@ const app = {
 
 		app.setProperSubscribedState();
 
-		app.displayUnreadSubs();
-
 		chrome.storage.local.get('cwc_user', data => $(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' ) );
 
 		if(data?.comments !== undefined && Object.keys(data.comments).length)
@@ -260,7 +260,10 @@ const app = {
 	displayUnreadSubs: () => {
 		subscriptions.getUnreadCount().then((unread) => {
 			if(unread > 0)
+			{
 				rfind('#unreadNum').text(unread);
+				rfind('#haveUnread').show();
+			}
 			else
 				rfind('#haveUnread').hide();
 		});
