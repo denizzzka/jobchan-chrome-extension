@@ -130,7 +130,7 @@ class SubscriptionsStorage {
 		const r = await this.bySub();
 
 		const sorted = r
-			.sort((a, b) => a.added - b.added);
+			.sort((a, b) => b.added - a.added);
 
 		return sorted;
 	}
