@@ -143,17 +143,6 @@ const app = {
 
 	getURL: () => location.href.split('?')[0],
 
-	getPageId: async () => {
-		if(document.page_id === undefined)
-		{
-			let r = await app.request({ action: 'getPageId' });
-			document.page_id = r.page_id;
-			document.latest_activity_id = r.latest_activity_id;
-		}
-
-		return document.page_id;
-	},
-
 	setProperSubscribedState: async () => {
 		app.displayUnreadSubs();
 
@@ -164,7 +153,7 @@ const app = {
 	},
 
 	subscribe: async () => {
-		await subscriptions.upsertSubscription(await app.getPageId(), app.getURL(), $("title").text(), document.latest_activity_id);
+		await subscriptions.upsertSubscription(document.page_id, app.getURL(), $("title").text(), document.latest_activity_id);
 		app.setProperSubscribedState();
 	},
 
