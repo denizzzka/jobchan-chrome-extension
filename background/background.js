@@ -2,19 +2,22 @@ const subsAlarmName = 'check-subscriptions';
 const defaultUpdateTimeout = 1.0;
 
 const app = {
+	subscriptions: null,
 
-	init: async () => {
+	init: () => {
 
 		self.importScripts('/assets/js/fetch.js');
-		self.importScripts('/assets/js/storage.js');
+		self.importScripts('/background/subscriptions.js');
+
+		this.subscriptions = new SubscriptionsStorage();
 
 		chrome.action.setBadgeBackgroundColor({ color: "#ff6600" });
 		chrome.action.setBadgeTextColor({ color: "#ffffff" });
 
 		app.actions();
 
-		if(await app.updateBadgeFromStorage())
-			app.setSubsUpdateAlarm();
+		app.setSubsUpdateAlarm();
+		app.refreshSubscrVisualisation();
 	},
 
 	isAlarmSet: async () => {
@@ -28,20 +31,16 @@ const app = {
 		});
 	},
 
-	stopSubsUpdateAlarm: () => {
-		chrome.alarms.clear(subsAlarmName);
-	},
+	refreshSubscrVisualisation: async () => {
+		let unreadNum = await subscriptions.getUnreadSubsCount();
 
-	updateBadgeFromStorage: async () => {
-		const isSubsStored = subscriptions.isSubsStored();
-
-		let unreadNum = await subscriptions.getUnreadCount();
+		chrome.action.setTitle({
+			title: "JobChan: Обсуждение вакансий\nНепрочитанных тем: "+unreadNum
+		});
 
 		chrome.action.setBadgeText({
 			text: unreadNum > 0 ? unreadNum.toString() : ""
 		});
-
-		return isSubsStored;
 	},
 
 	actions: () => {
@@ -50,8 +49,12 @@ const app = {
 			if(alarm_name.name != subsAlarmName)
 				return;
 
-			const page_ids = (await subscriptions.bySub())
+			const page_ids = (await subscriptions.getAllSubs())
 				.map((a) => a.page_id);
+
+			// User has no subscriptions?
+			if(page_ids.length == 0)
+				return;
 
 			const stats = await app.request(
 				{ action: 'getStats' },
@@ -75,27 +78,16 @@ const app = {
 			const found = stats.latest_actions
 				.map((e) => e.page_id);
 
-			// not found:
-			subscriptions.bySub().then((r) => {
+			// Mark not found subscriptions as removed:
+			subscriptions.getAllSubs().then((r) => {
 				r.forEach((a) => {
 					if(found.includes(a.page_id) == false)
 						subscriptions.setRemoved(a.page_id);
 				});
 			});
+
+			app.refreshSubscrVisualisation();
 		});
-
-		chrome.storage.onChanged.addListener(async(changes, namespace) => {
-			const haveSubs = await app.updateBadgeFromStorage();
-
-			if(haveSubs)
-			{
-				if(!(await app.isAlarmSet()))
-					app.setSubsUpdateAlarm();
-			}
-			else
-				app.stopSubsUpdateAlarm();
-		});
-
 	},
 
 	getLocalStorage: ( key ) => {

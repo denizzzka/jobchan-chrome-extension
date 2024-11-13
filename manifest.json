@@ -18,14 +18,14 @@
 		"default_popup": "popup/main.html"
 	},
 	"background": {
-		"service_worker": "assets/js/background.js"
+		"service_worker": "background/background.js"
 	},
     "web_accessible_resources": [
         {
             "resources": [
 				"panel/panel.html",
-				"assets/style.css",
 				"popup/main.html",
+				"assets/style.css",
 				"assets/rules.html"
 			],
             "matches": ["<all_urls>"]

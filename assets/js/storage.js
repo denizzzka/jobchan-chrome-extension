@@ -1,127 +1,54 @@
 class SubscriptionsStorage {
-	async #getSubsArray() {
-		const key = "subscriptions_list";
-
-		const r = await chrome.storage.local.get(key).then((r) => r?.[key]);
-
-		if(r === undefined)
-			return [];
-
-		// TODO: Иногда почему-то null встречаются - разобраться!
-		return r.filter((e) => e != null);
-	}
-
-	async #insertToSubsArray(page_id) {
-		const key = "subscriptions_list";
-
-		let r = await this.#getSubsArray();
-
-		r.push(page_id);
-
-		chrome.storage.local.set({[key]: r});
-	}
-
-	async #removeListFromSubsArray(page_ids) {
-		let r = await this.#getSubsArray();
-
-		if(r === undefined)
-			return;
-
-		r = r.filter((e) => e.includes(page_ids) == false);
-
-		const key = "subscriptions_list";
-
-		chrome.storage.local.set({[key]: r});
-	}
-
-	#getKey(page_id) { return "subscription:" + page_id; }
-
 	async #getByPageId(page_id) {
-		const key = this.#getKey(page_id);
+		console.assert(page_id !== undefined);
 
-		const j = await chrome.storage.local.get(key);
-
-		return j?.[key];
-	}
-
-	#setByPageId(page_id, v) {
-		const key = this.#getKey(page_id);
-
-		return chrome.storage.local.set({ [key]: v });
+		return new Promise((resolve) => {
+			chrome.runtime.sendMessage({
+				"subsAction": "getOne",
+				"page_id": page_id
+			}, function(r) {
+				resolve(r);
+			});
+		});
 	}
 
 	async bySub() {
-		const r = await this.#getSubsArray();
-
-		return await Promise.all(
-			r.map(async(id) => await this.#getByPageId(id))
-		);
+		return new Promise((resolve) => {
+			chrome.runtime.sendMessage({"subsAction": "getAll"}, function(r) {
+				resolve(r);
+			});
+		});
 	}
 
-	async upsertSubscription(page_id, url, title, latest_activity_counter) {
-		let r = await this.#getByPageId(page_id);
-
-		if(r === undefined)
-		{
-			r = {
-				"page_id": page_id,
-				"url": url,
-				"title": title,
-				"added": Date.now(),
-				"curr_activity_counter": latest_activity_counter,
-				"latest_activity_counter": latest_activity_counter,
-				"isRemoved": false
-			};
-
-			this.#insertToSubsArray(page_id);
-		}
-		else
-		{
-			r["url"] = url;
-			r["title"] = title;
-			r["latest_activity_counter"] = latest_activity_counter;
-		}
-
-		this.#setByPageId(page_id, r);
+	async upsertSubscription(page_id, url, title, latest_activity_counter, markAsRead = true) {
+		chrome.runtime.sendMessage({
+			"subsAction": "upsertSubscription",
+			"page_id": page_id,
+			"url": url,
+			"title": title,
+			"latest_activity_counter": latest_activity_counter,
+			"markAsRead": markAsRead
+		});
 	}
 
 	async isSubscribed(page_id) {
+		if(page_id === undefined)
+			return false;
+
 		const v = await this.#getByPageId(page_id);
 
-		return v !== undefined;
+		console.assert(v !== undefined);
+
+		return v?.page_id === page_id;
 	}
 
 	async markAsReadIfSubscribed(page_id, latest_activity_counter) {
-		const r = await this.#getByPageId(page_id);
-
-		if(r !== undefined)
-		{
-			r.curr_activity_counter = latest_activity_counter;
-			r.latest_activity_counter = latest_activity_counter;
-		}
-
-		await this.#setByPageId(page_id, r);
-	}
-
-	async setActivityCounterIfSubscribed(page_id, latest_activity_counter) {
-		const r = await this.#getByPageId(page_id);
-
-		if(r !== undefined)
-		{
-			r.latest_activity_counter = latest_activity_counter;
-			r.isRemoved = false;
-		}
-
-		await this.#setByPageId(page_id, r);
-	}
-
-	async setRemoved(page_id) {
-		const r = await this.#getByPageId(page_id);
-
-		if(r !== undefined)
-			r.isRemoved = true;
-
-		await this.#setByPageId(page_id, r);
+		chrome.runtime.sendMessage({
+			"subsAction": "updateFromCustomJson",
+			"page_id": page_id,
+			"curr_activity_counter": latest_activity_counter,
+			"latest_activity_counter": latest_activity_counter
+		});
 	}
 
 	async getSortedSubscriptions() {
@@ -136,28 +63,18 @@ class SubscriptionsStorage {
 	}
 
 	async deleteSubscription(page_id) {
-		const e = [page_id];
-		await this.#removeListFromSubsArray(e);
-
-		const key = this.#getKey(page_id);
-		await chrome.storage.local.remove(key);
-	}
-
-	async isSubsStored() {
-		const r = await this.#getSubsArray();
-
-		return r.length > 0;
+		chrome.runtime.sendMessage({
+				"subsAction": "removeOne",
+				"page_id": page_id
+		});
 	}
 
 	async getUnreadCount() {
-		const unreadSubsFlags = (await this.bySub())
-			.map((e) => e.curr_activity_counter < e.latest_activity_counter);
-
-		const unreadNum = unreadSubsFlags
-			.map((isUnread) => isUnread ? 1 : 0)
-			.reduce((ret, i) => ret + i, 0);
-
-		return unreadNum;
+		return new Promise((resolve) => {
+			chrome.runtime.sendMessage({"subsAction": "getUnreadSubsCount"}, function(r) {
+				resolve(r);
+			});
+		});
 	}
 }
 

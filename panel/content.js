@@ -314,9 +314,7 @@ const app = {
 
 		document.page_id = add.page_id;
 		document.latest_activity_id = add.latest_activity_id;
-		await subscriptions.upsertSubscription(document.page_id, app.getURL(), $("title").text(), document.latest_activity_id);
-		app.setProperSubscribedState();
-		await subscriptions.markAsReadIfSubscribed(document.page_id, document.latest_activity_id);
+		await app.subscribe();
 
 		if (add.msg_id) {
 			app.updateCounterButtonText(1);
