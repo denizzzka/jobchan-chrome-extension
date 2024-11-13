@@ -5,10 +5,6 @@ const app = {
 	subscriptions: null,
 
 	init: () => {
-
-		self.importScripts('/assets/js/fetch.js');
-		self.importScripts('/background/subscriptions.js');
-
 		this.subscriptions = new SubscriptionsStorage();
 
 		chrome.action.setBadgeBackgroundColor({ color: "#ff6600" });
