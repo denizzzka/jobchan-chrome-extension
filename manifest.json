@@ -14,6 +14,12 @@
 		"https://*.zarplata.ru/vacancy/*"
 	],
 	"permissions": [ "alarms", "storage" ],
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{2aca1668-dae2-45b4-aba5-4ac49c2a0ac9}",
+			"strict_min_version": "109.0"
+		}
+	},
 	"action": {
 		"default_popup": "popup/main.html"
 	},
