@@ -5,6 +5,7 @@
 	"version": "0.5.0",
 	"homepage_url": "https://t.me/jobchan_extension",
 	"icons": {
+		"128": "assets/icons/logo_128x128.png",
 		"48": "assets/icons/48x48_bw.png"
 	},
 	"host_permissions": [
