@@ -2,18 +2,12 @@
 	"manifest_version": 3,
 	"name": "JobChan: Обсуждение вакансий",
 	"description": "Обсуждение вакансий на сайтах поиска работы",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"homepage_url": "https://t.me/jobchan_extension",
 	"icons": {
 		"128": "assets/icons/logo_128x128.png",
 		"48": "assets/icons/48x48_bw.png"
 	},
-	"host_permissions": [
-		"https://career.habr.com/vacancies/*",
-		"https://*.hh.ru/vacancy/*",
-		"https://*.rabota.ru/vacancy/*",
-		"https://*.zarplata.ru/vacancy/*"
-	],
 	"permissions": [ "alarms", "storage" ],
 	"action": {
 		"default_popup": "popup/main.html"
