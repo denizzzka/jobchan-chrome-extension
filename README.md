@@ -9,11 +9,11 @@
 
 ### Поддерживаемые браузеры
 
-Расширение проверялось только на Google Chrome.
+Расширение работает в Google Chrome и [Firefox](https://addons.mozilla.org/ru/firefox/addon/jobchan/)
 
 Теоретически, должно работать на: Chromium, Yandex Browser (десктоп и Android), Kiwi Browser (Android) и так далее.
 
-### Установка вручную
+### Установка вручную в Google Chrome
 
 1. Зайдите на [страницу релизов](https://github.com/denizzzka/jobchan-chrome-extension/releases/). Найдите последнюю версию расширения (она сверху) и нажмите "Assets".
 
