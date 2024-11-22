@@ -536,9 +536,6 @@ const app = {
 				w = minOpenPanelWidth;
 		}
 
-		if(w != orig_w)
-			panel_local_storage.setWidth(w);
-
 		await panel.css('width', `${w}px`);
 		await panel.addClass('active');
 
