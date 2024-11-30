@@ -54,6 +54,9 @@
                     </div>
                 </div>
                 <div class="chrome-web-comments-item-comment"></div>
+                <div class="reactions-bar">
+                    <span class="reactions-reminder">[реакции]</span><span class="reactions"></span><span class="reactions-not-involved"></span>
+                </div>
                 <div class="chrome-web-comments-item-answear">
                     ответить
                 </div>
@@ -70,6 +73,13 @@
             </div>
             <div class="cwc-child-list" data-list-id="`+ args.msg_id +`"></div>
         </div>
+    </template>
+
+    <template id="template-reaction-buttons">
+        <button class="reaction-button">
+            <img src="/assets/emoji/" class="pict">
+            <span class="reaction-count"></span>
+        </button>
     </template>
 
 </section>

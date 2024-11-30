@@ -20,6 +20,7 @@
             "resources": [
 				"panel/panel.html",
 				"popup/main.html",
+				"assets/emoji/*",
 				"assets/style.css",
 				"assets/rules.html"
 			],

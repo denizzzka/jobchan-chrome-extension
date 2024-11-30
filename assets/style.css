@@ -164,7 +164,6 @@ TODO: rename chrome-web-comments-* to usual short names
     text-decoration: underline;
     cursor: pointer;
     position: relative;
-    bottom: 5px;
 }
 
 .cwc-answear-form{
@@ -261,4 +260,35 @@ ul
 .buttons
 {
     text-align: center;
+}
+
+.reactions-reminder {
+    cursor: pointer;
+    color: #ccc;
+}
+
+img.pict {
+    height: 1.6em;
+    width: auto;
+}
+
+.reaction-button {
+    border: solid 1px #ccc;
+    border-radius: 3em;
+}
+
+.reaction-button:hover {
+    background-color: lightgray;
+}
+
+.reaction-button.selected {
+    border: solid 1px #000;
+}
+
+.reactions-not-involved {
+    visibility: hidden;
+}
+
+.reactions-bar:hover .reactions-not-involved {
+    visibility: visible;
 }
