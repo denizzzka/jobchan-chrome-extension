@@ -96,6 +96,7 @@ const app = {
 		$(root).on('click', '.chrome-web-comments-item-editBtn', app.editComment);
 		$(root).on('click', '.chrome-web-comments-item-deleteBtn', app.deleteComment);
 		$(root).on('click', '.report-button', app.complaintButtonPressedHdl);
+		$(root).on('click', '.reaction-button', app.reactionButtonPressedHdl);
 		$(root).on('input', '#cwc_user', () => chrome.storage.local.set({ cwc_user: $('#cwc_user').val() }) )
 	},
 
@@ -451,6 +452,57 @@ const app = {
 			$(event.target).text("Жалоба отправлена");
 	},
 
+	reactionButtonPressedHdl: async(event) => {
+		event.preventDefault();
+
+		const msg_wrap = event.target.closest('.chrome-web-comments-item-wrap');
+		const msg_id = msg_wrap.getAttribute("id");
+
+		// Do not hide not-involved reactions anymore
+		$(msg_wrap).find('.reactions-not-involved').removeClass('reactions-not-involved');
+
+		// remove previous selection and count
+		const bar = $(event.target.closest('.reactions-bar'));
+		const prevSelected = bar.find('.selected')
+		const selected = $(event.target.closest('.reaction-button'));
+
+		const updateReactionCount = (e, increment) => {
+			const countElem = e.find('.reaction-count');
+			countElem.text(parseInt(countElem.text()) + increment);
+		};
+
+		const isSameReactionPressed = selected.hasClass('selected');
+
+		prevSelected.removeClass('selected');
+		updateReactionCount(prevSelected, -1);
+
+		let reactionToSend;
+
+		if(isSameReactionPressed) {
+			// deselect reaction
+			reactionToSend = "";
+		}
+		else
+		{
+			// adds selection and count to new reaction button
+			selected.addClass('selected');
+			updateReactionCount(selected, 1);
+			reactionToSend = event.target.closest('.reaction-button').value;
+		}
+
+		const ret = await app.request({ action: 'reaction' },
+		{
+			msg_id: msg_id,
+			reaction: reactionToSend,
+		});
+
+		if(ret === undefined)
+		{
+			app.showErrorBanner("Ошибка отправки реакции");
+			return;
+		}
+	},
+
 	cloneOfCommentTemplate: async(args, own, root_id = null) => {
 		const showModifyControls = await own_comments.isCommentModifiable(document.page_id, args.msg_id);
 
@@ -474,6 +526,65 @@ const app = {
 			c.find(".report-button").hide();
 		else
 			c.find(".modifiable").hide();
+
+		//TODO: ditto
+		const reaction_tpl = rfind("#template-reaction-buttons")[0];
+
+		const buttonsAvail = [
+			{ value: "thumbs_up", picture: "thumbs_up.png", title: "большой палец вверх" },
+			{ value: "thumbs_down", picture: "thumbs_down.png", title: "большой палец вниз" },
+			{ value: "ok", picture: "ok_hand.png", title: "окей!" },
+			{ value: "wolf", picture: "wolves.png", title: "волк" },
+			{ value: "party_popper", picture: "party_popper.png", title: "праздник" },
+		];
+
+		let zeroed = {};
+
+		let buttons = await buttonsAvail.reduce((acc, button) => {
+			if (args.reactions[button.value] !== undefined) {
+				acc[button.value] = {
+					value: button.value,
+					title: button.title,
+					picture: button.picture,
+					count: args.reactions[button.value],
+				};
+			}
+			else
+				zeroed[button.value] = {
+					value: button.value,
+					title: button.title,
+					picture: button.picture,
+					count: 0,
+				};
+
+			return acc;
+		}, {});
+
+		function putBtns(tgt, btnsArr)
+		{
+			Object.values(btnsArr).forEach(b => {
+				const btn = $( document.importNode(reaction_tpl.content, true) );
+				btn.find(".reaction-button").attr("value", b.value);
+				btn.find(".reaction-button").attr("title", `Реакция "${b.title}"`);
+				btn.find(".reaction-count").text(b.count);
+
+				const path = btn.find(".pict").attr("src");
+				btn.find(".pict").attr("src", chrome.runtime.getURL(path) + b.picture);
+
+				if(args?.current_reaction == b.value)
+					btn.find(".reaction-button").addClass('selected');
+
+				c.find(tgt).append(btn);
+			});
+		}
+
+		if(Object.keys(buttons).length != 0)
+		{
+			c.find(".reactions-reminder").hide();
+			putBtns(".reactions", buttons);
+		}
+
+		putBtns(".reactions-not-involved", zeroed);
 
 		return c;
 	},
