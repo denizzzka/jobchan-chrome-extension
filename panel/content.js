@@ -459,10 +459,10 @@ const app = {
 		const msg_id = msg_wrap.getAttribute("id");
 
 		// Do not hide not-involved reactions anymore
-		$(msg_wrap).find('.reactions-not-involved').removeClass('reactions-not-involved');
+		const bar = $(event.target.closest('.reactions-bar'));
+		bar.find('.reactions-not-involved').removeClass('reactions-not-involved');
 
 		// remove previous selection and count
-		const bar = $(event.target.closest('.reactions-bar'));
 		const prevSelected = bar.find('.selected')
 		const selected = $(event.target.closest('.reaction-button'));
 
