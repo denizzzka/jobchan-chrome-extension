@@ -533,6 +533,7 @@ const app = {
 		const buttonsAvail = [
 			{ value: "thumbs_up", picture: "thumbs_up.png", title: "большой палец вверх" },
 			{ value: "thumbs_down", picture: "thumbs_down.png", title: "большой палец вниз" },
+			{ value: "laughing_face", picture: "emoji_u1f604.svg", title: "смеющееся лицо" },
 			{ value: "ok", picture: "ok_hand.png", title: "окей!" },
 			{ value: "wolf", picture: "wolves.png", title: "волк" },
 			{ value: "party_popper", picture: "party_popper.png", title: "праздник" },
