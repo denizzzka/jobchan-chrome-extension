@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/assets/style.css">
     </head>
     <body>
-        <h1>Обзор вакансий с новыми комментариями</h1>
+        <h1>Вакансии с новыми комментариями</h1>
         <div id="cwc-error" hidden>Нет связи с сервером</div>
         <section id="main_section">
             <div>
@@ -14,7 +14,10 @@
                     <template id="recentItemTpl">
                         <li class="recentItem">
                             <nobr>
-                                <span class="recent-link">
+                                <span class="subscription-link">
+                                    <span class="unread" title="Количество сообщений"><!-- FIXME: class "unread" used -->
+                                        (<span class="msgs-cnt"></span>)
+                                    </span>
                                     <a class="page-link" target="_blank"></a>
                                 </span>
                             </nobr>
@@ -25,6 +28,6 @@
         </section>
         <script type="text/javascript" src="/assets/libs/jquery.min.js"></script>
         <script type="text/javascript" src="/assets/libs/jquery-ui.js"></script>
-        <script type="text/javascript" src="popup.js"></script>
+        <script type="text/javascript" src="recent.js"></script>
     </body>
 </html>
