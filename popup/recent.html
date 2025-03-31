@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf-8">
+    <head>
+        <title>Свежие комментарии</title>
+        <link rel="stylesheet" href="/assets/style.css">
+    </head>
+    <body>
+        <h1>Вакансии с новыми комментариями</h1>
+        <div id="cwc-error" hidden>Нет связи с сервером</div>
+        <section id="main_section">
+            <div class="nav"></div>
+
+            <div>
+                <ul id="recentList">
+                    <template id="recentItemTpl">
+                        <li class="recentItem">
+                            <nobr>
+                                <span class="subscription-link">
+                                    <a class="page-link" target="_blank"></a> -
+                                    <!-- FIXME: class "unread" is used -->
+                                    комментариев: <span class="msgs-cnt unread" title="Количество комментариев"></span>,
+                                    <span class="timestamp" title="Время создания последнего комментария"></span>
+                                </span>
+                            </nobr>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+
+            <div class="nav"></div>
+
+        </section>
+        <script type="text/javascript" src="/assets/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="/assets/libs/jquery-ui.js"></script>
+        <script type="text/javascript" src="/assets/js/fetch.js"></script>
+        <script type="text/javascript" src="recent.js"></script>
+    </body>
+</html>

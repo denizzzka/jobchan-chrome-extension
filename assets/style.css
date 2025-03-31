@@ -292,3 +292,32 @@ img.pict {
 .reactions-bar:hover .reactions-not-involved {
     visibility: visible;
 }
+
+.nav {
+    text-align: center;
+    margin-bottom: 1em;
+    margin-top: 5px;
+    padding: 2px;
+    zoom:1.5;
+    display: flex;
+    gap: 0.2em;
+    flex-wrap: wrap
+    align-items: center;
+    justify-content: center;
+}
+
+.nav:before .nav:after {
+    content: "";
+    display: table
+}
+
+.nav:after {
+    clear: both
+}
+
+.page-number {
+/*
+    border: solid 1px;
+    border-radius: 5px;
+*/
+}
