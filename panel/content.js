@@ -181,7 +181,7 @@ const app = {
 			$('body').append(s);
 		}
 
-		let data = await app.request( { action: 'getComments' } );
+		let data = await app.request( { action: 'getComments', title: $("title").text() } );
 
 		if( data?.hide_panel )
 			return false;
@@ -288,6 +288,7 @@ const app = {
 		form.find('textarea[name="comment"]').prop('disabled', true);
 
 		args = Object.assign({ name: rfind('#cwc_user').val() }, args);
+		args['title'] = $("title").text();
 		args['author_secret'] = self.crypto.randomUUID();
 
 		let add = await app.request({ action: "addComment" }, args);
@@ -375,6 +376,7 @@ const app = {
 				const updatedText = textarea.value;
 
 				const response = await app.request({ action: 'updateComment' }, {
+					title: $("title").text(),
 					msg_id: msg_id,
 					author_secret: b.secret,
 					name: msg.author,
