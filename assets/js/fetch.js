@@ -7,7 +7,7 @@ const requester = {
 		if( Object.keys( args ).length ){
 			const params = new URLSearchParams();
 
-			params.append('api', '1.0');
+			params.append('api', '1.1');
 
 			for( const key in args ){
 				if( args.hasOwnProperty( key ) )
