@@ -32,6 +32,7 @@
 		"matches": [
 			"https://career.habr.com/vacancies/*",
 			"https://*.hh.ru/vacancy/*",
+			"https://*.rabota.by/vacancy/*",
 			"https://*.rabota.ru/vacancy/*",
 			"https://*.zarplata.ru/vacancy/*"
 		 ],

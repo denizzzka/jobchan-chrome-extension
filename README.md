@@ -6,6 +6,7 @@
 * hh.ru
 * rabota.ru
 * zarplata.ru
+* rabota.by
 
 ### Поддерживаемые браузеры
 
