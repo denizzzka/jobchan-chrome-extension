@@ -167,7 +167,7 @@ TODO: rename chrome-web-comments-* to usual short names
     transition: .3s;
     background: #f1f1f1;
     position: relative;
-    border-radius: 10px 10px 10px 0px;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .cwc-my-comment-true{
