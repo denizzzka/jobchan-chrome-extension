@@ -603,7 +603,7 @@ const app = {
 		if( args.children && args.children.length ){
 			for( let k in args.children )
 			{
-				const child = children[k];
+				const child = args.children[k];
 				const own = await own_comments.getCommentBelongings(document.page_id, child.msg_id);
 
 				app.addAnswerToComment(root_id, child, own !== undefined);
