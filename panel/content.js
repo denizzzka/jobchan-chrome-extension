@@ -9,6 +9,7 @@ function rfind(s)
 
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
+const panelSizeRatio = 0.4;
 
 const app = {
 
@@ -548,9 +549,9 @@ const app = {
 
 		if (panel.hasClass('slide-top') || panel.hasClass('slide-bottom')) {
 			await panel.css('width', `${window.innerWidth}px`);
-			await panel.css('height', `${window.innerHeight * 0.4}px`);
+			await panel.css('height', `${window.innerHeight * panelSizeRatio}px`);
 		} else {
-			let w = window.innerWidth * 0.4;
+			let w = window.innerWidth * panelSizeRatio;
 			const gap = window.innerWidth - w;
 			if(gap < minOpenPanelGap) {
 				w = window.innerWidth - minOpenPanelGap;
