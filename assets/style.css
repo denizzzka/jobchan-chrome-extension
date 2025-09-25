@@ -20,14 +20,6 @@ TODO: rename chrome-web-comments-* to usual short names
     transition: .3s;
 }
 
-#chrome-web-comments-panel-resizer{
-    width: 0.6em;
-    float: left;
-    cursor: ew-resize;
-    user-select: none;
-    background-color: transparent;
-    height: 100%;
-}
 
 #panel-payload{
     width: 100%;
@@ -301,7 +293,7 @@ img.pict {
     zoom:1.5;
     display: flex;
     gap: 0.2em;
-    flex-wrap: wrap
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 }

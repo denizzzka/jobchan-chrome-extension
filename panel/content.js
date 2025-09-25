@@ -27,8 +27,6 @@ const app = {
 	events: () => {
 		let root = rfind('#all-stuff');
 
-		app.panelResizingEventsHandler(root);
-
 		chrome.storage.onChanged.addListener(async(changes, namespace) => {
 			app.setProperSubscribedState(document.page_id);
 		});
@@ -49,45 +47,6 @@ const app = {
 		$(root).on('input', '#cwc_user', () => chrome.storage.local.set({ cwc_user: $('#cwc_user').val() }) )
 	},
 
-	panelResizingEventsHandler: (root) => {
-		const panel = rfind('#chrome-web-comments-panel');
-
-		let jitter;
-		const setPanelWidth = function(absX) {
-			if(absX < minOpenPanelWidth) return;
-
-			let invWidth = window.innerWidth - absX - jitter;
-
-			if(invWidth < minOpenPanelGap) invWidth = minOpenPanelGap;
-
-			panel.css('width', `${invWidth}px`);
-		}
-
-		$(root).on('mousedown', '#chrome-web-comments-panel-resizer', (e) => {
-			let $rszr = $(e.target);
-			jitter = window.innerWidth - panel.width() - e.clientX;
-
-			$('html,body').css('cursor','ew-resize');
-			const transBackup = panel.css('transition');
-			panel.css('transition', 'none');
-
-			let currPanelWidth = e.clientX;
-			let intervalId = setInterval(() => { setPanelWidth(currPanelWidth); }, 25);
-
-			$(document).on('mouseup', (e) => {
-				$(document).off('mousemove');
-				$(document).off('mouseup');
-				clearInterval(intervalId);
-				setPanelWidth(e.clientX);
-				panel.css('transition', transBackup);
-				$('html,body').css('cursor','default');
-			});
-
-			$(document).on('mousemove', (e) => {
-				currPanelWidth = e.clientX;
-			});
-		});
-	},
 
 	getURL: () => location.href.split('?')[0],
 
