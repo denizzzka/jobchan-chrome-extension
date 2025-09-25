@@ -633,9 +633,9 @@ const app = {
 		} else if (panel.hasClass('slide-left')) {
 			delta = e.clientX - startX;
 		} else if (panel.hasClass('slide-top')) {
-			delta = startY - e.clientY;
-		} else if (panel.hasClass('slide-bottom')) {
 			delta = e.clientY - startY;
+		} else if (panel.hasClass('slide-bottom')) {
+			delta = startY - e.clientY;
 		}
 		const newRatio = Math.max(0.1, Math.min(0.9, startRatio + delta / dimension));
 		if (newRatio !== panelSizeRatio) {
