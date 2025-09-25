@@ -363,7 +363,7 @@ img.pict {
     justify-content: center;
 }
 
-.nav:before .nav:after {
+.nav:before, .nav:after {
     content: "";
     display: table
 }
