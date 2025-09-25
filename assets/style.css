@@ -524,9 +524,9 @@ img.pict {
 }
 
 #chrome-web-comments-panel.slide-top #panel-resize-handle-center {
-    bottom: 0;
+    bottom: -0.45em;
 }
 
 #chrome-web-comments-panel.slide-bottom #panel-resize-handle-center {
-    top: 0;
+    top: -0.45em;
 }
