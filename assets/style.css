@@ -154,6 +154,7 @@ TODO: rename chrome-web-comments-* to usual short names
     flex: 1;
     overflow: auto;
     padding-right: 0.5em;
+    padding-bottom: 1.8em;
 }
 
 .chrome-web-comments-item-wrap{
