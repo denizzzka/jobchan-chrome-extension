@@ -503,6 +503,7 @@ img.pict {
     transform: translateY(-50%);
     cursor: ew-resize;
     background: #ccc;
+    display: none;
 }
 
 #chrome-web-comments-panel.slide-right #panel-resize-handle-center {
