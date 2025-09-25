@@ -187,7 +187,8 @@ const app = {
 			$(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' );
 			directions.forEach(d => {
 				const key = `${site}_${d}_panelSizeRatio`;
-				panelSizeRatios[d] = data[key] !== undefined ? data[key] : 0.4;
+				const defaultRatio = (d === 'top' || d === 'bottom') ? 0.75 : 0.4;
+				panelSizeRatios[d] = data[key] !== undefined ? data[key] : defaultRatio;
 			});
 			panelSizeRatio = panelSizeRatios[defaultDirection];
 			rfind('#panel-size-slider').val(panelSizeRatio);
