@@ -42,9 +42,6 @@ const app = {
 
 			await app.initCommentLists();
 			app.events();
-
-			//if(document.comments_num > 0)
-				app.panelOpeningRoutine();
 		});
 	},
 
@@ -159,6 +156,10 @@ const app = {
 				panelSizeRatio = data.panelSizeRatio;
 			}
 			rfind('#panel-size-slider').val(panelSizeRatio);
+
+			if(document.comments_num > 0) {
+				app.panelOpeningRoutine();
+			}
 		});
 
 		if(data?.comments !== undefined && Object.keys(data.comments).length)
