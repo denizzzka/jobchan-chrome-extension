@@ -393,3 +393,47 @@ img.pict {
 #panel-size-slider {
     width: 100px;
 }
+
+#panel-resize-handle {
+    position: absolute;
+    background: #ccc;
+    z-index: 10;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+#panel-resize-handle:hover {
+    opacity: 1;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle,
+#chrome-web-comments-panel.slide-left #panel-resize-handle {
+    top: 0;
+    width: 5px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle {
+    left: 0;
+}
+
+#chrome-web-comments-panel.slide-left #panel-resize-handle {
+    right: 0;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle {
+    left: 0;
+    height: 5px;
+    width: 100%;
+    cursor: ns-resize;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle {
+    bottom: 0;
+}
+
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle {
+    top: 0;
+}

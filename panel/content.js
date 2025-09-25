@@ -10,6 +10,10 @@ function rfind(s)
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
 let panelSizeRatio = 0.4;
+let isResizing = false;
+let startX = 0;
+let startY = 0;
+let startRatio = 0.4;
 
 const app = {
 
@@ -40,6 +44,7 @@ const app = {
 		$(root).on('click', '#chrome-web-comments-panel-close', app.closePanelEventHandler);
 		$(root).on('click', '#direction-switcher button', app.directionSwitcherClick);
 		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
+		$(root).on('mousedown', '#panel-resize-handle', app.startResize);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -604,6 +609,48 @@ const app = {
 		chrome.storage.local.set({panelSizeRatio: panelSizeRatio});
 		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
 			app.panelOpeningRoutine();
+		}
+	},
+
+	startResize: function(e) {
+		isResizing = true;
+		startX = e.clientX;
+		startY = e.clientY;
+		startRatio = panelSizeRatio;
+		$(document).on('mousemove', app.doResize);
+		$(document).on('mouseup', app.endResize);
+		e.preventDefault();
+	},
+
+	doResize: function(e) {
+		if (!isResizing) return;
+		const panel = rfind('#chrome-web-comments-panel');
+		let delta = 0;
+		const isVertical = panel.hasClass('slide-top') || panel.hasClass('slide-bottom');
+		const dimension = isVertical ? window.innerHeight : window.innerWidth;
+		if (panel.hasClass('slide-right')) {
+			delta = startX - e.clientX;
+		} else if (panel.hasClass('slide-left')) {
+			delta = e.clientX - startX;
+		} else if (panel.hasClass('slide-top')) {
+			delta = startY - e.clientY;
+		} else if (panel.hasClass('slide-bottom')) {
+			delta = e.clientY - startY;
+		}
+		const newRatio = Math.max(0.1, Math.min(0.9, startRatio + delta / dimension));
+		if (newRatio !== panelSizeRatio) {
+			panelSizeRatio = newRatio;
+			app.panelOpeningRoutine();
+		}
+	},
+
+	endResize: function() {
+		if (isResizing) {
+			isResizing = false;
+			chrome.storage.local.set({panelSizeRatio: panelSizeRatio});
+			rfind('#panel-size-slider').val(panelSizeRatio);
+			$(document).off('mousemove', app.doResize);
+			$(document).off('mouseup', app.endResize);
 		}
 	},
 
