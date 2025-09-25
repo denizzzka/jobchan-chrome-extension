@@ -744,10 +744,11 @@ const app = {
 	},
 
 	getFormData: ( e ) => {
-		data = {};
+		let data = {};
 
 		e.serializeArray().map(( e ) => {
-			if( ( val = e.value.trim() ) )
+			const val = e.value.trim();
+			if( val )
 				data[ e.name ] = val;
 		});
 		return data;
