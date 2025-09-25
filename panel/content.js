@@ -681,7 +681,7 @@ const app = {
 		}
 	},
 
-	startResize: function(e) {
+	startResize: async function(e) {
 		isResizing = true;
 		startX = e.clientX;
 		startY = e.clientY;
