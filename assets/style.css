@@ -537,8 +537,8 @@ img.pict {
     position: fixed;
     bottom: 6vh;
     right: 15vw;
-    width: 100px;
-    height: 100px;
+    width: 10vh;
+    height: 10vh;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.8);
     border: solid 1px #ccc;
@@ -560,14 +560,14 @@ img.pict {
 }
 
 #mobile-comments-avail {
-    font-size: 36px;
+    font-size: 5vh;
     font-weight: bold;
 }
 
 #mobile-zero-comments {
-    font-size: 14px;
+    font-size: 1.5vh;
     line-height: 1.2;
-    padding: 5px;
+    padding: 0.5vh;
 }
 
 #chrome-web-comments-panel.active ~ #mobile-bottom-panel-button {
