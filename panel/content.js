@@ -19,7 +19,7 @@ const app = {
 			await app.initCommentLists();
 			app.events();
 
-			if(document.comments_num > 0)
+			//if(document.comments_num > 0)
 				app.panelOpeningRoutine();
 		});
 	},
