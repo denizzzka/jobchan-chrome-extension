@@ -363,8 +363,33 @@ img.pict {
 }
 
 .page-number {
-/*
+ /*
     border: solid 1px;
     border-radius: 5px;
-*/
+ */
+}
+
+#panel-size-control {
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999999999996;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#panel-size-control label {
+    font-size: 12px;
+    color: #333;
+}
+
+#panel-size-slider {
+    width: 100px;
 }

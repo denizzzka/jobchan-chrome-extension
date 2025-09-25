@@ -9,7 +9,7 @@ function rfind(s)
 
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
-const panelSizeRatio = 0.4;
+let panelSizeRatio = 0.4;
 
 const app = {
 
@@ -39,6 +39,7 @@ const app = {
 		$(root).on('click', '.chrome-web-comments-item-declineBtn', app.hideAnswerForm);
 		$(root).on('click', '#chrome-web-comments-panel-close', app.closePanelEventHandler);
 		$(root).on('click', '#direction-switcher button', app.directionSwitcherClick);
+		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -126,7 +127,13 @@ const app = {
 
 		app.setProperSubscribedState();
 
-		chrome.storage.local.get('cwc_user', data => $(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' ) );
+		chrome.storage.local.get(['cwc_user', 'panelSizeRatio'], data => {
+			$(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' );
+			if (data.panelSizeRatio !== undefined) {
+				panelSizeRatio = data.panelSizeRatio;
+			}
+			rfind('#panel-size-slider').val(panelSizeRatio);
+		});
 
 		if(data?.comments !== undefined && Object.keys(data.comments).length)
 		{
@@ -589,6 +596,14 @@ const app = {
 			setTimeout(() => {
 				app.panelOpeningRoutine();
 			}, 300);
+		}
+	},
+
+	panelSizeChange: function() {
+		panelSizeRatio = parseFloat($(this).val());
+		chrome.storage.local.set({panelSizeRatio: panelSizeRatio});
+		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
+			app.panelOpeningRoutine();
 		}
 	},
 
