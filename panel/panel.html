@@ -21,12 +21,11 @@
                 </nobr>
                 <a href="/popup/recent.html" class="relative-href">Комментарии к другим вакансиям</a>
             </section>
-            <button id="chrome-web-comments-panel-close">x</button>
             <form id="chrome-web-comments-form">
-                <label>
+                <label class="name-label" style="display: flex; justify-content: space-between;">
                     <input name="name" id="cwc_user" placeholder="Любое имя или ник" required disabled />
+                    <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
                 </label>
-                <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
                 <label>
                     <textarea name="comment" placeholder="Ваш комментарий" required ></textarea>
                 </label>
@@ -34,6 +33,7 @@
                     <button name="add">Отправить</button>
                 </label>
             </form>
+            <button id="chrome-web-comments-panel-close">x</button>
             <div id="cwc-error"></div>
             <div id="chrome-web-comments-lists"></div>
         </div>
