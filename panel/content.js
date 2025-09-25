@@ -625,10 +625,10 @@ const app = {
 		const payload = rfind('#panel-payload');
 
 		if (panel.hasClass('slide-top') || panel.hasClass('slide-bottom')) {
-			await panel.css('width', `${window.innerWidth}px`);
-			await panel.css('height', `${window.innerHeight * panelSizeRatio}px`);
-			await payload.css('padding-left', '20px');
-			await payload.css('padding-right', '20px');
+			panel.css('width', `${window.innerWidth}px`);
+			panel.css('height', `${window.innerHeight * panelSizeRatio}px`);
+			payload.css('padding-left', '20px');
+			payload.css('padding-right', '20px');
 		} else {
 			let w = window.innerWidth * panelSizeRatio;
 			const gap = window.innerWidth - w;
@@ -636,18 +636,18 @@ const app = {
 				w = window.innerWidth - minOpenPanelGap;
 				if(w < minOpenPanelWidth) w = minOpenPanelWidth;
 			}
-			await panel.css('width', `${w}px`);
-			await panel.css('height', `${window.innerHeight}px`);
+			panel.css('width', `${w}px`);
+			panel.css('height', `${window.innerHeight}px`);
 			if (panel.hasClass('slide-right')) {
-				await payload.css('padding-left', '0.7em');
-				await payload.css('padding-right', '20px');
+				payload.css('padding-left', '0.7em');
+				payload.css('padding-right', '20px');
 			} else if (panel.hasClass('slide-left')) {
-				await payload.css('padding-right', '0.7em');
-				await payload.css('padding-left', '20px');
+				payload.css('padding-right', '0.7em');
+				payload.css('padding-left', '20px');
 			}
 		}
 
-		await panel.addClass('active');
+		panel.addClass('active');
 	},
 
 	closePanelEventHandler: () => {
