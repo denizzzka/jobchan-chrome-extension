@@ -170,6 +170,12 @@ const app = {
 		const defaultDirection = aspectRatio < 0.75 ? 'bottom' : 'right';
 		rfind('#chrome-web-comments-panel').addClass('slide-' + defaultDirection);
 
+		if (defaultDirection === 'bottom') {
+			rfind('#chrome-web-comments-panel-button').hide();
+		} else {
+			rfind('#mobile-bottom-panel-button').hide();
+		}
+
 		app.updateCounterButtonText(0);
 
 		app.setProperSubscribedState();
