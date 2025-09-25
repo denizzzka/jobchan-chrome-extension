@@ -15,6 +15,25 @@ let startX = 0;
 let startY = 0;
 let startRatio = 0.4;
 
+// Throttle function to limit the rate of execution
+function throttle(func, delay) {
+	let timeoutId;
+	let lastExecTime = 0;
+	return function (...args) {
+		const currentTime = Date.now();
+		if (currentTime - lastExecTime > delay) {
+			func.apply(this, args);
+			lastExecTime = currentTime;
+		} else {
+			clearTimeout(timeoutId);
+			timeoutId = setTimeout(() => {
+				func.apply(this, args);
+				lastExecTime = Date.now();
+			}, delay - (currentTime - lastExecTime));
+		}
+	};
+}
+
 const app = {
 
 	init: () => {
@@ -617,7 +636,13 @@ const app = {
 		startX = e.clientX;
 		startY = e.clientY;
 		startRatio = panelSizeRatio;
-		$(document).on('mousemove', app.doResize);
+
+		// Temporarily remove transitions for smoother resizing
+		const panel = rfind('#chrome-web-comments-panel');
+		this.originalTransition = panel.css('transition');
+		panel.css('transition', 'none');
+
+		$(document).on('mousemove', throttledResize);
 		$(document).on('mouseup', app.endResize);
 		e.preventDefault();
 	},
@@ -649,8 +674,12 @@ const app = {
 			isResizing = false;
 			chrome.storage.local.set({panelSizeRatio: panelSizeRatio});
 			rfind('#panel-size-slider').val(panelSizeRatio);
-			$(document).off('mousemove', app.doResize);
+			$(document).off('mousemove', throttledResize);
 			$(document).off('mouseup', app.endResize);
+
+			// Restore transitions
+			const panel = rfind('#chrome-web-comments-panel');
+			panel.css('transition', this.originalTransition || '');
 		}
 	},
 
@@ -691,5 +720,8 @@ const app = {
 		}
 	}
 }
+
+// Create throttled version of doResize
+const throttledResize = throttle(app.doResize, 16); // 60 fps
 
 app.init();
