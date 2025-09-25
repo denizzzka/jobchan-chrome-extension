@@ -3,21 +3,64 @@ TODO: rename chrome-web-comments-* to usual short names
 */
 
 #chrome-web-comments-panel{
-    padding-right: 1.9em;
+    padding: 0;
     position: fixed;
-    right: -100%;
-    top: 0px;
-    width: 40%;
-    height: 100%;
     visibility: hidden;
     transition: .3s;
     z-index: 9999999999999;
 }
 
+#chrome-web-comments-panel.slide-right{
+    right: -40%;
+    top: 0px;
+    width: 40%;
+    height: 100%;
+    padding-right: 1.9em;
+}
+
+#chrome-web-comments-panel.slide-left{
+    left: -40%;
+    top: 0px;
+    width: 40%;
+    height: 100%;
+    padding-left: 1.9em;
+}
+
+#chrome-web-comments-panel.slide-top{
+    top: -40%;
+    left: 0px;
+    width: 100%;
+    height: 40%;
+    padding-top: 1.9em;
+}
+
+#chrome-web-comments-panel.slide-bottom{
+    bottom: -40%;
+    left: 0px;
+    width: 100%;
+    height: 40%;
+    padding-bottom: 1.9em;
+}
+
 #chrome-web-comments-panel.active{
-    right: 0;
     visibility: visible;
     transition: .3s;
+}
+
+#chrome-web-comments-panel.slide-right.active{
+    right: 0;
+}
+
+#chrome-web-comments-panel.slide-left.active{
+    left: 0;
+}
+
+#chrome-web-comments-panel.slide-top.active{
+    top: 0;
+}
+
+#chrome-web-comments-panel.slide-bottom.active{
+    bottom: 0;
 }
 
 
@@ -44,6 +87,32 @@ TODO: rename chrome-web-comments-* to usual short names
     border: solid 1px #ccc;
     font-size: large;
     z-index: 9999999999998;
+}
+
+#direction-switcher {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999999999997;
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#direction-switcher button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#direction-switcher button:hover {
+    background: #f0f0f0;
 }
 
 #chrome-web-comments-panel-close{

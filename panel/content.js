@@ -37,6 +37,7 @@ const app = {
 		$(root).on('click', '.chrome-web-comments-item-answear', app.showAnswearForm);
 		$(root).on('click', '.chrome-web-comments-item-declineBtn', app.hideAnswerForm);
 		$(root).on('click', '#chrome-web-comments-panel-close', app.closePanelEventHandler);
+		$(root).on('click', '#direction-switcher button', app.directionSwitcherClick);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -117,6 +118,8 @@ const app = {
 			const base = $(e).attr("href");
 			$(e).attr("href", chrome.runtime.getURL(base));
 		});
+
+		rfind('#chrome-web-comments-panel').addClass('slide-right');
 
 		app.updateCounterButtonText(0);
 
@@ -543,24 +546,38 @@ const app = {
 	panelOpeningRoutine: async () => {
 		const panel = rfind('#chrome-web-comments-panel');
 
-		let w = window.innerWidth * 0.4;
-
-		const gap = window.innerWidth - w;
-
-		if(gap < minOpenPanelGap)
-		{
-			w = window.innerWidth - minOpenPanelGap;
-
-			if(w < minOpenPanelWidth)
-				w = minOpenPanelWidth;
+		if (panel.hasClass('slide-top') || panel.hasClass('slide-bottom')) {
+			await panel.css('width', `${window.innerWidth}px`);
+			await panel.css('height', `${window.innerHeight * 0.4}px`);
+		} else {
+			let w = window.innerWidth * 0.4;
+			const gap = window.innerWidth - w;
+			if(gap < minOpenPanelGap) {
+				w = window.innerWidth - minOpenPanelGap;
+				if(w < minOpenPanelWidth) w = minOpenPanelWidth;
+			}
+			await panel.css('width', `${w}px`);
+			await panel.css('height', `${window.innerHeight}px`);
 		}
 
-		await panel.css('width', `${w}px`);
 		await panel.addClass('active');
 	},
 
 	closePanelEventHandler: () => {
 		rfind('#chrome-web-comments-panel').removeClass('active');
+	},
+
+	directionSwitcherClick: function() {
+		const direction = $(this).data('direction');
+		const panel = rfind('#chrome-web-comments-panel');
+		panel.removeClass('slide-right slide-left slide-top slide-bottom');
+		panel.addClass('slide-' + direction);
+		if (panel.hasClass('active')) {
+			panel.removeClass('active');
+			setTimeout(() => {
+				app.panelOpeningRoutine();
+			}, 300);
+		}
 	},
 
 	getFormData: ( e ) => {
