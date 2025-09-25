@@ -755,10 +755,10 @@ const app = {
 	},
 
 	showErrorBanner: (msg) => {
-		rfind('#cwc-error').text( msg ).delay(5000).queue( next => {
+		rfind('#cwc-error').text( msg );
+		setTimeout(() => {
 			rfind('#cwc-error').text('');
-			next();
-		});
+		}, 5000);
 	},
 
 	request: async (args, post_args ={}) => {
