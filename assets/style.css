@@ -122,11 +122,10 @@ TODO: rename chrome-web-comments-* to usual short names
 }
 
 #chrome-web-comments-form {
-    margin-top: 1em;
 }
 
 .name-label {
-    padding: 0.7em 0;
+    padding: 0.15em 0;
 }
 
 #chrome-web-comments-form label input[name="name"]{
