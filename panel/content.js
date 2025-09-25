@@ -119,7 +119,7 @@ const app = {
 		let e = $(this);
 
 		e.closest('.chrome-web-comments-item-wrap').prev().find('.chrome-web-comments-item-user:contains("'+ e.text().replace('@', '') +'")').closest('.chrome-web-comments-item').addClass('active').delay(600).queue( next => {
-			$('.chrome-web-comments-item.active').removeClass('active');
+			rfind('.chrome-web-comments-item.active').removeClass('active');
 			next();
 		});
 	},
