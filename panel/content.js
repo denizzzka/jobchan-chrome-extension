@@ -71,7 +71,9 @@ const app = {
 		$(root).on('click', '.chrome-web-comments-item-deleteBtn', app.deleteComment);
 		$(root).on('click', '.report-button', app.complaintButtonPressedHdl);
 		$(root).on('click', '.reaction-button', app.reactionButtonPressedHdl);
-		$(root).on('input', '#cwc_user', () => chrome.storage.local.set({ cwc_user: $('#cwc_user').val() }) )
+		$(root).on('input', '#cwc_user', () => chrome.storage.local.set({ cwc_user: $('#cwc_user').val() }) );
+
+		$(window).on('resize', app.onWindowResize);
 	},
 
 
@@ -680,6 +682,12 @@ const app = {
 			// Restore transitions
 			const panel = rfind('#chrome-web-comments-panel');
 			panel.css('transition', this.originalTransition || '');
+		}
+	},
+
+	onWindowResize: () => {
+		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
+			app.panelOpeningRoutine();
 		}
 	},
 
