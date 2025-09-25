@@ -6,10 +6,28 @@ function rfind(s)
 	return $(root).find(s);
 }
 
+function getSecondLevelDomain() {
+    const hostname = location.hostname;
+    const parts = hostname.split('.');
+    if (parts.length >= 2) {
+        return parts[parts.length - 2] + '.' + parts[parts.length - 1];
+    }
+    return hostname;
+}
+
+function getCurrentDirection() {
+    const panel = rfind('#chrome-web-comments-panel');
+    if (panel.hasClass('slide-left')) return 'left';
+    if (panel.hasClass('slide-top')) return 'top';
+    if (panel.hasClass('slide-bottom')) return 'bottom';
+    return 'right';
+}
+
 
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
 let panelSizeRatio = 0.4;
+let panelSizeRatios = {};
 let isResizing = false;
 let startX = 0;
 let startY = 0;
@@ -150,11 +168,16 @@ const app = {
 
 		app.setProperSubscribedState();
 
-		chrome.storage.local.get(['cwc_user', 'panelSizeRatio'], data => {
+		const site = getSecondLevelDomain();
+		const directions = ['right', 'left', 'top', 'bottom'];
+		const keys = directions.map(d => `${site}_${d}_panelSizeRatio`);
+		chrome.storage.local.get(['cwc_user', ...keys], data => {
 			$(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' );
-			if (data.panelSizeRatio !== undefined) {
-				panelSizeRatio = data.panelSizeRatio;
-			}
+			directions.forEach(d => {
+				const key = `${site}_${d}_panelSizeRatio`;
+				panelSizeRatios[d] = data[key] !== undefined ? data[key] : 0.4;
+			});
+			panelSizeRatio = panelSizeRatios['right'];
 			rfind('#panel-size-slider').val(panelSizeRatio);
 
 			if(document.comments_num > 0) {
@@ -618,6 +641,8 @@ const app = {
 		const panel = rfind('#chrome-web-comments-panel');
 		panel.removeClass('slide-right slide-left slide-top slide-bottom');
 		panel.addClass('slide-' + direction);
+		panelSizeRatio = panelSizeRatios[direction];
+		rfind('#panel-size-slider').val(panelSizeRatio);
 		if (panel.hasClass('active')) {
 			panel.removeClass('active');
 			setTimeout(() => {
@@ -628,7 +653,11 @@ const app = {
 
 	panelSizeChange: function() {
 		panelSizeRatio = parseFloat($(this).val());
-		chrome.storage.local.set({panelSizeRatio: panelSizeRatio});
+		const direction = getCurrentDirection();
+		const site = getSecondLevelDomain();
+		const key = `${site}_${direction}_panelSizeRatio`;
+		chrome.storage.local.set({[key]: panelSizeRatio});
+		panelSizeRatios[direction] = panelSizeRatio;
 		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
 			app.panelOpeningRoutine();
 		}
@@ -675,7 +704,11 @@ const app = {
 	endResize: function() {
 		if (isResizing) {
 			isResizing = false;
-			chrome.storage.local.set({panelSizeRatio: panelSizeRatio});
+			const direction = getCurrentDirection();
+			const site = getSecondLevelDomain();
+			const key = `${site}_${direction}_panelSizeRatio`;
+			chrome.storage.local.set({[key]: panelSizeRatio});
+			panelSizeRatios[direction] = panelSizeRatio;
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			$(document).off('mousemove', throttledResize);
 			$(document).off('mouseup', app.endResize);
