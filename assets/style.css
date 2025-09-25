@@ -11,22 +11,22 @@ TODO: rename chrome-web-comments-* to usual short names
 }
 
 #chrome-web-comments-panel.slide-right{
-    right: -40%;
+    right: -50%;
     top: 0px;
 }
 
 #chrome-web-comments-panel.slide-left{
-    left: -40%;
+    left: -50%;
     top: 0px;
 }
 
 #chrome-web-comments-panel.slide-top{
-    top: -40%;
+    top: -50%;
     left: 0px;
 }
 
 #chrome-web-comments-panel.slide-bottom{
-    bottom: -40%;
+    bottom: -50%;
     left: 0px;
 }
 
@@ -433,40 +433,40 @@ img.pict {
 
 #chrome-web-comments-panel.slide-right #panel-resize-handle-center::before,
 #chrome-web-comments-panel.slide-left #panel-resize-handle-center::before {
-    top: 45%;
-    left: 10%;
-    right: 10%;
-    height: 2px;
+    top: 10%;
+    bottom: 10%;
+    left: 40%;
+    width: 2px;
 }
 
 #chrome-web-comments-panel.slide-right #panel-resize-handle-center::after,
 #chrome-web-comments-panel.slide-left #panel-resize-handle-center::after {
-    top: 55%;
+    top: 10%;
+    bottom: 10%;
+    left: 60%;
+    width: 2px;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center::before,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::before {
+    top: 40%;
     left: 10%;
     right: 10%;
     height: 2px;
 }
 
-#chrome-web-comments-panel.slide-top #panel-resize-handle-center::before,
-#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::before {
-    left: 45%;
-    top: 10%;
-    bottom: 10%;
-    width: 2px;
-}
-
 #chrome-web-comments-panel.slide-top #panel-resize-handle-center::after,
 #chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::after {
-    left: 55%;
-    top: 10%;
-    bottom: 10%;
-    width: 2px;
+    top: 60%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
 }
 
 #chrome-web-comments-panel.slide-right #panel-resize-handle,
 #chrome-web-comments-panel.slide-left #panel-resize-handle {
     top: 0;
-    width: 5px;
+    width: 3px;
     height: 100%;
     cursor: ew-resize;
 }
@@ -482,7 +482,7 @@ img.pict {
 #chrome-web-comments-panel.slide-top #panel-resize-handle,
 #chrome-web-comments-panel.slide-bottom #panel-resize-handle {
     left: 0;
-    height: 5px;
+    height: 3px;
     width: 100%;
     cursor: ns-resize;
 }
