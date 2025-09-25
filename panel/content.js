@@ -155,7 +155,7 @@ const app = {
 		const response = await fetch(url);
 		$(shadow).append(await response.text());
 
-		$(shadow).find('#all-stuff').append('<button id="mobile-bottom-panel-button">Кнопка</button>');
+		$(shadow).find('#all-stuff').append('<button id="mobile-bottom-panel-button"><div id="mobile-zero-comments">Оставьте Ваш комментарий!</div><div id="mobile-comments-avail"><span></span></div></button>');
 
 		$(shadow).find('#all-stuff').append(
 			`<link rel="stylesheet" href="`+chrome.runtime.getURL("assets/style.css")+`">`
@@ -207,16 +207,21 @@ const app = {
 		document.comments_num += n;
 
 		rfind("#msgs-counter").text(document.comments_num);
+		rfind("#mobile-comments-avail span").text(document.comments_num);
 
 		if(document.comments_num !== undefined && document.comments_num > 0)
 		{
 			rfind('#zero-comments').hide();
 			rfind('#comments-avail').show();
+			rfind('#mobile-zero-comments').hide();
+			rfind('#mobile-comments-avail').show();
 		}
 		else
 		{
 			rfind('#zero-comments').show();
 			rfind('#comments-avail').hide();
+			rfind('#mobile-zero-comments').show();
+			rfind('#mobile-comments-avail').hide();
 		}
 	},
 

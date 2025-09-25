@@ -545,6 +545,29 @@ img.pict {
     cursor: pointer;
     z-index: 9999999999999;
     font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mobile-bottom-panel-button div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+}
+
+#mobile-comments-avail {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+#mobile-zero-comments {
+    font-size: 14px;
+    line-height: 1.2;
+    padding: 5px;
 }
 
 #chrome-web-comments-panel.active ~ #mobile-bottom-panel-button {
