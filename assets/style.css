@@ -107,7 +107,7 @@ TODO: rename chrome-web-comments-* to usual short names
     border: none;
     font-size: 18pt;
     position: absolute;
-    right: 6px;
+    right: 1vw;
     top: 0px;
     color: #f00;
     cursor: pointer;
