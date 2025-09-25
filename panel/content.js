@@ -547,9 +547,13 @@ const app = {
 	panelOpeningRoutine: async () => {
 		const panel = rfind('#chrome-web-comments-panel');
 
+		const payload = rfind('#panel-payload');
+
 		if (panel.hasClass('slide-top') || panel.hasClass('slide-bottom')) {
 			await panel.css('width', `${window.innerWidth}px`);
 			await panel.css('height', `${window.innerHeight * panelSizeRatio}px`);
+			await payload.css('padding-left', '20px');
+			await payload.css('padding-right', '20px');
 		} else {
 			let w = window.innerWidth * panelSizeRatio;
 			const gap = window.innerWidth - w;
@@ -559,6 +563,13 @@ const app = {
 			}
 			await panel.css('width', `${w}px`);
 			await panel.css('height', `${window.innerHeight}px`);
+			if (panel.hasClass('slide-right')) {
+				await payload.css('padding-left', '0.7em');
+				await payload.css('padding-right', '20px');
+			} else if (panel.hasClass('slide-left')) {
+				await payload.css('padding-right', '0.7em');
+				await payload.css('padding-left', '20px');
+			}
 		}
 
 		await panel.addClass('active');
