@@ -163,7 +163,9 @@ const app = {
 			$(e).attr("href", chrome.runtime.getURL(base));
 		});
 
-		rfind('#chrome-web-comments-panel').addClass('slide-right');
+		const aspectRatio = window.innerWidth / window.innerHeight;
+		const defaultDirection = aspectRatio < 0.75 ? 'bottom' : 'right';
+		rfind('#chrome-web-comments-panel').addClass('slide-' + defaultDirection);
 
 		app.updateCounterButtonText(0);
 
@@ -178,7 +180,7 @@ const app = {
 				const key = `${site}_${d}_panelSizeRatio`;
 				panelSizeRatios[d] = data[key] !== undefined ? data[key] : 0.4;
 			});
-			panelSizeRatio = panelSizeRatios['right'];
+			panelSizeRatio = panelSizeRatios[defaultDirection];
 			rfind('#panel-size-slider').val(panelSizeRatio);
 
 			if(document.comments_num > 0) {
