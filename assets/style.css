@@ -413,14 +413,54 @@ img.pict {
     position: absolute;
     background: #ccc;
     z-index: 11;
-    opacity: 0.7;
+    opacity: 1;
     border: 1px solid #999;
+    border-radius: 0.3em;
     transition: opacity 0.2s;
 }
 
 #panel-resize-handle-center:hover {
     opacity: 1;
     background: #aaa;
+}
+
+#panel-resize-handle-center::before,
+#panel-resize-handle-center::after {
+    content: '';
+    position: absolute;
+    background: #999;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center::before,
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center::before {
+    top: 45%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center::after,
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center::after {
+    top: 55%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center::before,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::before {
+    left: 45%;
+    top: 10%;
+    bottom: 10%;
+    width: 2px;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center::after,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::after {
+    left: 55%;
+    top: 10%;
+    bottom: 10%;
+    width: 2px;
 }
 
 #chrome-web-comments-panel.slide-right #panel-resize-handle,
@@ -462,6 +502,7 @@ img.pict {
     height: 3em;
     transform: translateY(-50%);
     cursor: ew-resize;
+    background: #ccc;
 }
 
 #chrome-web-comments-panel.slide-right #panel-resize-handle-center {
@@ -479,6 +520,7 @@ img.pict {
     width: 3em;
     transform: translateX(-50%);
     cursor: ns-resize;
+    background: #ccc;
 }
 
 #chrome-web-comments-panel.slide-top #panel-resize-handle-center {
