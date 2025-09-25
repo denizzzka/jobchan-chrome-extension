@@ -72,6 +72,7 @@ const app = {
 
 		$(root).on('submit', '#chrome-web-comments-form', app.submitCommentEventHandler);
 		$(root).on('click', '#chrome-web-comments-panel-button', app.openPanelButtonClickHdlr);
+		$(root).on('click', '#mobile-bottom-panel-button', app.openPanelButtonClickHdlr);
 		$(root).on('submit', '.cwc-answear-form', app.submitAnswerToCommentEventHandler);
 		$(root).on('click', '.chrome-web-comments-item-answear', app.showAnswearForm);
 		$(root).on('click', '.chrome-web-comments-item-declineBtn', app.hideAnswerForm);
@@ -153,6 +154,8 @@ const app = {
 		const url = chrome.runtime.getURL("panel/panel.html")
 		const response = await fetch(url);
 		$(shadow).append(await response.text());
+
+		$(shadow).find('#all-stuff').append('<button id="mobile-bottom-panel-button">Кнопка</button>');
 
 		$(shadow).find('#all-stuff').append(
 			`<link rel="stylesheet" href="`+chrome.runtime.getURL("assets/style.css")+`">`
