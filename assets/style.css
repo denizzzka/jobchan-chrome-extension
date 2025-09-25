@@ -132,6 +132,8 @@ TODO: rename chrome-web-comments-* to usual short names
     padding: 0.2em;
     border: solid 1px #ccc;
     border-bottom: solid 1px #ccc;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #chrome-web-comments-form label textarea[name="comment"]{
@@ -139,6 +141,8 @@ TODO: rename chrome-web-comments-* to usual short names
     height: 6em;
     resize: vertical;
     border: solid 1px #ccc;
+    padding: 0.2em;
+    box-sizing: border-box;
 }
 
 #chrome-web-comments-form label button[name="add"]{
@@ -256,6 +260,8 @@ TODO: rename chrome-web-comments-* to usual short names
 
 #chrome-web-comments-form label{
     position: relative;
+    margin-bottom: 0.2em;
+    display: block;
 }
 
 #cwc-error{
