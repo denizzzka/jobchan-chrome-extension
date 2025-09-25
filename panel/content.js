@@ -79,6 +79,7 @@ const app = {
 		$(root).on('click', '#direction-switcher button', app.directionSwitcherClick);
 		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
 		$(root).on('mousedown', '#panel-resize-handle', app.startResize);
+		$(root).on('mousedown', '#panel-resize-handle-center', app.startResize);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);

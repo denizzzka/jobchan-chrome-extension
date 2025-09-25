@@ -409,6 +409,20 @@ img.pict {
     opacity: 1;
 }
 
+#panel-resize-handle-center {
+    position: absolute;
+    background: #ccc;
+    z-index: 11;
+    opacity: 0.7;
+    border: 1px solid #999;
+    transition: opacity 0.2s;
+}
+
+#panel-resize-handle-center:hover {
+    opacity: 1;
+    background: #aaa;
+}
+
 #chrome-web-comments-panel.slide-right #panel-resize-handle,
 #chrome-web-comments-panel.slide-left #panel-resize-handle {
     top: 0;
@@ -438,5 +452,39 @@ img.pict {
 }
 
 #chrome-web-comments-panel.slide-bottom #panel-resize-handle {
+    top: 0;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center,
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center {
+    top: 50%;
+    width: 0.9em;
+    height: 3em;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center {
+    left: 0;
+}
+
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center {
+    right: 0;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center {
+    left: 50%;
+    height: 0.9em;
+    width: 3em;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center {
+    bottom: 0;
+}
+
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center {
     top: 0;
 }
