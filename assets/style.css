@@ -573,3 +573,18 @@ img.pict {
 #chrome-web-comments-panel.active ~ #mobile-bottom-panel-button {
     display: none;
 }
+
+.rules {
+    max-width: 100%;
+    background-color: gainsboro;
+}
+
+.rules h3 {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.rules ul {
+    list-style: decimal;
+    user-select: text;
+}
