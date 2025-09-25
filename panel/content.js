@@ -6,54 +6,6 @@ function rfind(s)
 	return $(root).find(s);
 }
 
-function getSecondLevelDomain() {
-	const host = location.hostname;
-	const parts = host.split('.');
-
-	const sld = parts[parts.length - 2];
-	const tld = parts[parts.length - 1];
-
-	return `${sld}.${tld}`;
-}
-
-function panelWidthKey() {
-	return "panel-width:" + getSecondLevelDomain();
-}
-
-function panelStateKey() {
-	return "panel-state:" + getSecondLevelDomain();
-}
-
-const panel_local_storage = {
-	getWidth: async () => {
-		const key = panelWidthKey();
-		const r = await chrome.storage.local.get(key);
-
-		let w = r?.[key];
-
-		if(w === undefined)
-			w = rfind('#chrome-web-comments-panel').width();
-
-		return w;
-	},
-
-	setWidth: (w) => {
-		const key = panelWidthKey();
-		chrome.storage.local.set({ [key]: w });
-	},
-
-	panelStateSet: (isOpened) => {
-		const key = panelStateKey();
-		chrome.storage.local.set({ [key]: isOpened });
-	},
-
-	isPanelOpened: async () => {
-		const key = panelStateKey();
-		const r = await chrome.storage.local.get(key);
-
-		return (r?.[key] === undefined) ? false : r?.[key];
-	}
-}
 
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
@@ -67,11 +19,8 @@ const app = {
 			await app.initCommentLists();
 			app.events();
 
-			if(await panel_local_storage.isPanelOpened())
-			{
-				if(document.comments_num > 0)
-					app.panelOpeningRoutine();
-			}
+			if(document.comments_num > 0)
+				app.panelOpeningRoutine();
 		});
 	},
 
@@ -132,8 +81,6 @@ const app = {
 				setPanelWidth(e.clientX);
 				panel.css('transition', transBackup);
 				$('html,body').css('cursor','default');
-
-				panel_local_storage.setWidth(panel.width());
 			});
 
 			$(document).on('mousemove', (e) => {
@@ -637,8 +584,7 @@ const app = {
 	panelOpeningRoutine: async () => {
 		const panel = rfind('#chrome-web-comments-panel');
 
-		const orig_w = await panel_local_storage.getWidth();
-		let w = orig_w;
+		let w = window.innerWidth * 0.4;
 
 		const gap = window.innerWidth - w;
 
@@ -652,13 +598,10 @@ const app = {
 
 		await panel.css('width', `${w}px`);
 		await panel.addClass('active');
-
-		panel_local_storage.panelStateSet(true);
 	},
 
 	closePanelEventHandler: () => {
 		rfind('#chrome-web-comments-panel').removeClass('active');
-		panel_local_storage.panelStateSet(false);
 	},
 
 	getFormData: ( e ) => {
