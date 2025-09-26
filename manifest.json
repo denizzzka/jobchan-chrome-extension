@@ -10,7 +10,7 @@
 	},
 	"permissions": [ "alarms", "storage" ],
 	"action": {
-		"default_popup": "popup/main.html"
+		"default_popup": "popup/subscriptions.html"
 	},
 	"background": {
 		"service_worker": "background/background.js"
@@ -19,7 +19,7 @@
         {
             "resources": [
 				"panel/panel.html",
-				"popup/main.html",
+				"popup/subscriptions.html",
 				"popup/recent.html",
 				"assets/emoji/*",
 				"assets/style.css",
