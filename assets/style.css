@@ -132,7 +132,7 @@ TODO: rename chrome-web-comments-* to usual short names
     padding: 0.2em;
     border: solid 1px #ccc;
     border-bottom: solid 1px #ccc;
-    width: 100%;
+    width: 12em;
     box-sizing: border-box;
 }
 
@@ -598,7 +598,7 @@ img.pict {
 .nav-link {
     display: inline-block;
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.0em;
     text-align: center;
 }
 
