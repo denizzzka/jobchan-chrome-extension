@@ -65,11 +65,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
     if (unreadCount > 0) {
-        $('#subs-text').html('<strong>Подписки</strong>');
-        $('#unread-count').text(` (${unreadCount})`);
+        $('#no-unread').hide();
+        $('#with-unread').show();
+        $('#unread-num').text(unreadCount);
     } else {
-        $('#subs-text').text('Подписки');
-        $('#unread-count').text('');
+        $('#no-unread').show();
+        $('#with-unread').hide();
     }
 });
 
