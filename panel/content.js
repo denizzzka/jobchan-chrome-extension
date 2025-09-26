@@ -52,6 +52,11 @@ function throttle(func, delay) {
 	};
 }
 
+function convertUrlsToLinks(text) {
+	const urlRegex = /\b([a-zA-Z][a-zA-Z+.-]{0,9}:\/\/[^\s]+)/g;
+	return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+}
+
 const app = {
 
 	init: () => {
@@ -379,6 +384,7 @@ const app = {
 				if (response?.error === undefined) {
 					subscriptions.markAsReadIfSubscribed(document.page_id, response.latest_activity_id);
 
+					response.comment = convertUrlsToLinks(response.comment);
 					msg_wrap.querySelector('.chrome-web-comments-item-comment')
 						.innerHTML = response.comment;
 
@@ -501,6 +507,7 @@ const app = {
 		c.find(".chrome-web-comments-item").attr("id", args.msg_id);
 		c.find(".chrome-web-comments-item-user").text(args.author);
 		c.find(".chrome-web-comments-item-date").text(args.created);
+		args.comment = convertUrlsToLinks(args.comment);
 		c.find(".chrome-web-comments-item-comment").html(args.comment);
 		c.find('.cwc-answear-form input[name="root_id"]').attr("value", (root_id == null ? args.msg_id : root_id));
 		c.find('.cwc-answear-form input[name="parent_id"]').attr("value", args.msg_id);
