@@ -15,6 +15,12 @@ function getSecondLevelDomain() {
     return hostname;
 }
 
+function savePanelState(state) {
+    const site = getSecondLevelDomain();
+    const key = `${site}_panelState`;
+    chrome.storage.local.set({[key]: state});
+}
+
 function getCurrentDirection() {
     const panel = rfind('#chrome-web-comments-panel');
     if (panel.hasClass('slide-left')) return 'left';
@@ -187,8 +193,9 @@ const app = {
 
 		const site = getSecondLevelDomain();
 		const directions = ['right', 'left', 'top', 'bottom'];
+		const stateKey = `${site}_panelState`;
 		const keys = directions.map(d => `${site}_${d}_panelSizeRatio`);
-		chrome.storage.local.get(['cwc_user', ...keys], data => {
+		chrome.storage.local.get(['cwc_user', stateKey, ...keys], data => {
 			$(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' );
 			directions.forEach(d => {
 				const key = `${site}_${d}_panelSizeRatio`;
@@ -198,8 +205,16 @@ const app = {
 			panelSizeRatio = panelSizeRatios[defaultDirection];
 			rfind('#panel-size-slider').val(panelSizeRatio);
 
-			if(document.comments_num > 0) {
+			const savedState = data[stateKey];
+			if (savedState === 'open') {
 				app.panelOpeningRoutine();
+			} else if (savedState === 'closed') {
+				// do nothing
+			} else {
+				// no saved state
+				if(document.comments_num > 0) {
+					app.panelOpeningRoutine();
+				}
 			}
 		});
 
@@ -655,10 +670,12 @@ const app = {
 		}
 
 		panel.addClass('active');
+		savePanelState('open');
 	},
 
 	closePanelEventHandler: () => {
 		rfind('#chrome-web-comments-panel').removeClass('active');
+		savePanelState('closed');
 	},
 
 	directionSwitcherClick: function() {
