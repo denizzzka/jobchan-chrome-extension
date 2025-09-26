@@ -3,7 +3,7 @@ function getUrlParameter(name) {
     return urlParams.get(name);
 }
 
-const elemsPerPage = 20;
+const elemsPerPage = 15;
 
 function fillNav(currPage, numOfPages)
 {
