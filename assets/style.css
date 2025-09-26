@@ -6,7 +6,7 @@ TODO: rename chrome-web-comments-* to usual short names
     padding: 0;
     position: fixed;
     visibility: hidden;
-    transition: .3s;
+    transition: right .3s, left .3s, top .3s, bottom .3s;
     z-index: 9999999999999;
 }
 
@@ -32,7 +32,7 @@ TODO: rename chrome-web-comments-* to usual short names
 
 #chrome-web-comments-panel.active{
     visibility: visible;
-    transition: .3s;
+    transition: right .3s, left .3s, top .3s, bottom .3s;
 }
 
 #chrome-web-comments-panel.slide-right.active{
