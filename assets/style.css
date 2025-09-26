@@ -172,13 +172,13 @@ TODO: rename chrome-web-comments-* to usual short names
     transition: .3s;
     background: #f1f1f1;
     position: relative;
-    border-radius: 10px 10px 10px 10px;
+    border-radius: 10px;
 }
 
 .cwc-my-comment-true{
     /* right: -5%; */
     background: #e3fee0;
-    border-radius: 0px 10px 10px 10px;
+    border-top-left-radius: 0;
 }
 
 .chrome-web-comments-item-user{
@@ -246,7 +246,7 @@ TODO: rename chrome-web-comments-* to usual short names
 }
 
 .cwc-child-list .chrome-web-comments-item:not(.cwc-my-comment-true){
-    border-radius: 0px 10px 10px 10px;
+    border-top-left-radius: 0;
 }
 
 .cwc-answear-user{
