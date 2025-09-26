@@ -166,8 +166,6 @@ const app = {
 		const response = await fetch(url);
 		$(shadow).append(await response.text());
 
-		$(shadow).find('#all-stuff').append('<button id="mobile-bottom-panel-button" title="Количество комментариев"><div id="mobile-zero-comments">Оставьте Ваш комментарий!</div><div id="mobile-comments-avail"><span></span></div></button>');
-
 		$(shadow).find('#all-stuff').append(
 			`<link rel="stylesheet" href="`+chrome.runtime.getURL("assets/style.css")+`">`
 		);
