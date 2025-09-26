@@ -276,6 +276,8 @@ body
     width: 750px;
     max-width: 100%;
     background-color: gainsboro;
+    border: 1px solid #b4b4b4;
+    margin: 1px;
 }
 
 h1
