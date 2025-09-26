@@ -58,19 +58,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     r.recently_commented_list.forEach((e) => addToDisplay(e.url, e.title, e.commentsCount, e.new_added));
 
-    // Update unread count for subscriptions link
+    // Update unread count for subscriptions links
     const unreadCount = await new Promise((resolve) => {
         chrome.runtime.sendMessage({ subsAction: "getUnreadSubsCount" }, (response) => {
             resolve(response);
         });
     });
     if (unreadCount > 0) {
-        $('#no-unread').hide();
-        $('#with-unread').show();
-        $('#unread-num').text(unreadCount);
+        $('.no-unread').hide();
+        $('.with-unread').show();
+        $('.unread-num').text(unreadCount);
     } else {
-        $('#no-unread').show();
-        $('#with-unread').hide();
+        $('.no-unread').show();
+        $('.with-unread').hide();
     }
 });
 
