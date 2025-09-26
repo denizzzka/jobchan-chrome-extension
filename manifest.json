@@ -10,7 +10,7 @@
 	},
 	"permissions": [ "alarms", "storage" ],
 	"action": {
-		"default_popup": "popup/subscriptions.html"
+		"default_popup": "popup/recent.html"
 	},
 	"background": {
 		"service_worker": "background/background.js"

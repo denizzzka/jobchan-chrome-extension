@@ -273,6 +273,7 @@ TODO: rename chrome-web-comments-* to usual short names
 
 body
 {
+    width: 750px;
     max-width: 100%;
     background-color: gainsboro;
 }
