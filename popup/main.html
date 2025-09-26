@@ -13,18 +13,16 @@
                 <ul id="subscriptionsList">
                     <template id="subscriptionItemTpl">
                         <li class="subscriptionItem">
-                            <nobr>
-                                <span class="del_or_not">
-                                    <span class="approve">[ ]</span>
-                                    <span class="decline" hidden>[&cross;]</span>
+                            <span class="del_or_not">
+                                <span class="approve">[ ]</span>
+                                <span class="decline" hidden>[&cross;]</span>
+                            </span>
+                            <span class="subscription-link">
+                                <span class="unread" title="Количество непрочитанных сообщений">
+                                    (<span class="unread-val"></span>)
                                 </span>
-                                <span class="subscription-link">
-                                    <span class="unread" title="Количество непрочитанных сообщений">
-                                        (<span class="unread-val"></span>)
-                                    </span>
-                                    <a class="page-link" target="_blank"></a>
-                                </span>
-                            </nobr>
+                                <a class="page-link" target="_blank"></a>
+                            </span>
                         </li>
                     </template>
                 </ul>
