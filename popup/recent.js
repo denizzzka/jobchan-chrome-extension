@@ -68,9 +68,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         $('.no-unread').hide();
         $('.with-unread').show();
         $('.unread-num').text(unreadCount);
+        $('.top-subscriptions-link').show();
     } else {
         $('.no-unread').show();
         $('.with-unread').hide();
+        $('.top-subscriptions-link').hide();
     }
 });
 
