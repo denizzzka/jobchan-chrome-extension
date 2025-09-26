@@ -53,7 +53,7 @@ function throttle(func, delay) {
 }
 
 function convertUrlsToLinks(text) {
-	const urlRegex = /\b([a-zA-Z][a-zA-Z+.-]{0,9}:\/\/[^\s]+)/g;
+	const urlRegex = /\b([a-zA-Z][a-zA-Z+.-]{0,9}:\/\/[^/\s][^\s]*)/g;
 	return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
 }
 
