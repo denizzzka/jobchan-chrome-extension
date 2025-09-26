@@ -273,11 +273,21 @@ TODO: rename chrome-web-comments-* to usual short names
 
 body
 {
-    width: 750px;
-    max-width: 100%;
-    background-color: gainsboro;
-    border: 1px solid #b4b4b4;
-    margin: 1px;
+    width: auto;
+    max-width: none;
+    border: none;
+    margin: 0;
+}
+
+@media (max-width: 800px) {
+    body {
+        width: 750px;
+        max-width: 100%;
+        background-color: gainsboro;
+        padding-bottom: 1em;
+        border: 1px solid #b4b4b4;
+        margin: 1px;
+    }
 }
 
 h1
