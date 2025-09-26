@@ -231,8 +231,7 @@ const app = {
 	updateCounterButtonText: (n) => {
 		document.comments_num += n;
 
-		rfind("#msgs-counter").text(document.comments_num);
-		rfind("#mobile-comments-avail span").text(document.comments_num);
+		rfind(".msgs-counter").text(document.comments_num);
 
 		if(document.comments_num !== undefined && document.comments_num > 0)
 		{
