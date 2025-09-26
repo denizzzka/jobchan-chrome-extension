@@ -57,6 +57,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     fillNav(currPage, numOfPages);
 
     r.recently_commented_list.forEach((e) => addToDisplay(e.url, e.title, e.commentsCount, e.new_added));
+
+    // Update unread count for subscriptions link
+    const unreadCount = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ subsAction: "getUnreadSubsCount" }, (response) => {
+            resolve(response);
+        });
+    });
+    if (unreadCount > 0) {
+        $('#subs-text').html('<strong>Подписки</strong>');
+        $('#unread-count').text(` (${unreadCount})`);
+    } else {
+        $('#subs-text').text('Подписки');
+        $('#unread-count').text('');
+    }
 });
 
 async function request(args, post_args ={})
