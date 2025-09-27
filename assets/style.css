@@ -644,3 +644,9 @@ img.pict {
 .popup-page ul {
     padding-left: 1.2em;
 }
+
+#recentList {
+    list-style: disc;
+    margin-left: 0.7em;
+    text-indent: -0.5em;
+}
