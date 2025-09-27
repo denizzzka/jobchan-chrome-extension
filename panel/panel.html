@@ -1,42 +1,61 @@
 <section id="all-stuff">
     <button id="chrome-web-comments-panel-button">
         <div id="zero-comments">Оставьте Ваш комментарий!</div>
-        <div id="comments-avail">Комментарии: <span id="msgs-counter"></span></div>
+        <div id="comments-avail">Комментарии: <span class="msgs-counter"></span></div>
+    </button>
+
+    <button id="mobile-bottom-panel-button" title="Количество комментариев">
+        <div id="mobile-zero-comments">Оставьте Ваш комментарий!</div>
+        <div id="mobile-comments-avail"><span class="msgs-counter"></span></div>
     </button>
 
     <section id="chrome-web-comments-panel">
-        <div id="chrome-web-comments-panel-resizer"></div>
         <div id="panel-payload">
+            <div id="panel-resize-handle"></div>
+            <div id="panel-resize-handle-center"></div>
             <section id = "panel-subscribe">
-                <button id="subscrBtn" disabled=true>Подписаться</button>
-                <button id="unsubscrBtn" disabled=true>Отписаться</button>
+                <button id="subscrBtn" disabled=true title="Нажмите если хотите получать уведомления о новых комментариях к этой вакансии">Подписаться</button>
+                <button id="unsubscrBtn" disabled=true title="Отписаться от уведомлений о новых комментариях к этой вакансии">Отписаться</button>
                 <nobr>
-                    <a href="/popup/main.html" class="relative-href">Подписки</a>
+                    <a href="/popup/subscriptions.html" class="nav-link relative-href" title="Список ваших подписок на комментарии">Подписки</a>
                     <span id="haveUnread" title="Количество непрочитанных подписок">
                         <b>
                             (<span id="unreadNum">сбой скрипта</span>)
                         </b>
                     </span>
                 </nobr>
-                <a href="/popup/recent.html" class="relative-href">Комментарии к другим вакансиям</a>
+                <a href="/popup/recent.html" class="nav-link relative-href">Комментарии к другим вакансиям</a>
             </section>
-            <button id="chrome-web-comments-panel-close">x</button>
             <form id="chrome-web-comments-form">
-                <label>
+                <label class="name-label">
                     <input name="name" id="cwc_user" placeholder="Любое имя или ник" required disabled />
                 </label>
-                <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
                 <label>
                     <textarea name="comment" placeholder="Ваш комментарий" required ></textarea>
                 </label>
-                <label>
+                <label style="display: flex; justify-content: space-between;">
                     <button name="add">Отправить</button>
+                    <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
                 </label>
             </form>
+            <button id="chrome-web-comments-panel-close">x</button>
             <div id="cwc-error"></div>
             <div id="chrome-web-comments-lists"></div>
         </div>
     </section>
+
+    <div id="direction-switcher">
+        <button data-direction="right">→</button>
+        <button data-direction="left">←</button>
+        <button data-direction="top">↑</button>
+        <button data-direction="bottom">↓</button>
+    </div>
+
+    <div id="panel-size-control">
+        <label for="panel-size-slider">Размер панели:</label>
+        <input type="range" id="panel-size-slider" min="0.2" max="0.75" step="0.05" value="0.4">
+        <span id="panel-size-value">0.4</span>
+    </div>
 
     <template id="template-comment-wrapper">
        <div class="chrome-web-comments-item-wrap">

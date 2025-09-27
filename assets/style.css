@@ -3,41 +3,64 @@ TODO: rename chrome-web-comments-* to usual short names
 */
 
 #chrome-web-comments-panel{
-    padding-right: 1.9em;
+    padding: 0;
     position: fixed;
-    right: -100%;
-    top: 0px;
-    width: 40%;
-    height: 100%;
     visibility: hidden;
-    transition: .3s;
+    transition: right .3s, left .3s, top .3s, bottom .3s;
     z-index: 9999999999999;
 }
 
-#chrome-web-comments-panel.active{
-    right: 0;
-    visibility: visible;
-    transition: .3s;
+#chrome-web-comments-panel.slide-right{
+    right: -100%;
+    top: 0px;
 }
 
-#chrome-web-comments-panel-resizer{
-    width: 0.6em;
-    float: left;
-    cursor: ew-resize;
-    user-select: none;
-    background-color: transparent;
-    height: 100%;
+#chrome-web-comments-panel.slide-left{
+    left: -100%;
+    top: 0px;
 }
+
+#chrome-web-comments-panel.slide-top{
+    top: -100%;
+    left: 0px;
+}
+
+#chrome-web-comments-panel.slide-bottom{
+    bottom: -100%;
+    left: 0px;
+}
+
+#chrome-web-comments-panel.active{
+    visibility: visible;
+    transition: right .3s, left .3s, top .3s, bottom .3s;
+}
+
+#chrome-web-comments-panel.slide-right.active{
+    right: 0;
+}
+
+#chrome-web-comments-panel.slide-left.active{
+    left: 0;
+}
+
+#chrome-web-comments-panel.slide-top.active{
+    top: 0;
+}
+
+#chrome-web-comments-panel.slide-bottom.active{
+    bottom: 0;
+}
+
 
 #panel-payload{
-    width: 100%;
     height: 100%;
     background: #fff;
     padding: 20px;
     padding-top: 10px;
-    padding-left: 0.7em;
-    border-right: solid 1px #ccc;
+    border: solid 1px #ccc;
     box-shadow: 0px 0px 10px 5px #ccc;
+    display: flex;
+    flex-direction: column;
 }
 
 #chrome-web-comments-panel-button{
@@ -54,13 +77,40 @@ TODO: rename chrome-web-comments-* to usual short names
     z-index: 9999999999998;
 }
 
+#direction-switcher {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999999999997;
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#direction-switcher button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#direction-switcher button:hover {
+    background: #f0f0f0;
+}
+
 #chrome-web-comments-panel-close{
     background: none;
     border: none;
-    font-size: 18pt;
+    font-size: 27pt;
     position: absolute;
-    right: 6px;
+    right: 0px;
     top: 0px;
+    margin-right: 0.5em;
     color: #f00;
     cursor: pointer;
     transition: transform 0.5s ease;
@@ -71,11 +121,19 @@ TODO: rename chrome-web-comments-* to usual short names
     transform: rotate(360deg);
 }
 
+#chrome-web-comments-form {
+}
+
+.name-label {
+    padding: 0.15em 0;
+}
+
 #chrome-web-comments-form label input[name="name"]{
-    margin: 0.7em;
     padding: 0.2em;
     border: solid 1px #ccc;
     border-bottom: solid 1px #ccc;
+    width: 12em;
+    box-sizing: border-box;
 }
 
 #chrome-web-comments-form label textarea[name="comment"]{
@@ -83,12 +141,11 @@ TODO: rename chrome-web-comments-* to usual short names
     height: 6em;
     resize: vertical;
     border: solid 1px #ccc;
+    padding: 0.2em;
+    box-sizing: border-box;
 }
 
 #chrome-web-comments-form label button[name="add"]{
-    margin: auto;
-    left: 0;
-    right: 0;
     width: 140px;
     height: 30px;
     border: solid 1px #ccc;
@@ -96,15 +153,13 @@ TODO: rename chrome-web-comments-* to usual short names
 }
 
 #rules-link {
-    float: right;
-    height: 2.2em;
-    align-items: end;
 }
 
 #chrome-web-comments-lists{
-    height: 75%;
+    flex: 1;
     overflow: auto;
     padding-right: 0.5em;
+    padding-bottom: 1.8em;
 }
 
 .chrome-web-comments-item-wrap{
@@ -117,13 +172,13 @@ TODO: rename chrome-web-comments-* to usual short names
     transition: .3s;
     background: #f1f1f1;
     position: relative;
-    border-radius: 10px 10px 10px 0px;
+    border-radius: 10px;
 }
 
 .cwc-my-comment-true{
     /* right: -5%; */
     background: #e3fee0;
-    border-radius: 10px 10px 0px 10px;
+    border-top-left-radius: 0;
 }
 
 .chrome-web-comments-item-user{
@@ -155,6 +210,7 @@ TODO: rename chrome-web-comments-* to usual short names
 .chrome-web-comments-item-comment{
     margin-top: 0.4em;
     margin-bottom: 0.4em;
+    overflow-wrap: break-word;
 }
 
 .chrome-web-comments-item-answear{
@@ -191,7 +247,7 @@ TODO: rename chrome-web-comments-* to usual short names
 }
 
 .cwc-child-list .chrome-web-comments-item:not(.cwc-my-comment-true){
-    border-radius: 0px 10px 10px 10px;
+    border-top-left-radius: 0;
 }
 
 .cwc-answear-user{
@@ -205,6 +261,8 @@ TODO: rename chrome-web-comments-* to usual short names
 
 #chrome-web-comments-form label{
     position: relative;
+    margin-bottom: 0.2em;
+    display: block;
 }
 
 #cwc-error{
@@ -216,8 +274,21 @@ TODO: rename chrome-web-comments-* to usual short names
 
 body
 {
-    max-width: 100%;
-    background-color: gainsboro;
+    width: auto;
+    max-width: none;
+    border: none;
+    margin: 0;
+}
+
+@media (max-width: 800px) {
+    body {
+        width: 750px;
+        max-width: 100%;
+        background-color: gainsboro;
+        padding-bottom: 1em;
+        border: 1px solid #b4b4b4;
+        margin: 1px;
+    }
 }
 
 h1
@@ -301,12 +372,12 @@ img.pict {
     zoom:1.5;
     display: flex;
     gap: 0.2em;
-    flex-wrap: wrap
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 }
 
-.nav:before .nav:after {
+.nav:before, .nav:after {
     content: "";
     display: table
 }
@@ -316,8 +387,275 @@ img.pict {
 }
 
 .page-number {
-/*
+ /*
     border: solid 1px;
     border-radius: 5px;
-*/
+ */
+}
+
+#panel-size-control {
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999999999996;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#panel-size-control label {
+    font-size: 12px;
+    color: #333;
+}
+
+#panel-size-slider {
+    width: 100px;
+}
+
+#panel-resize-handle {
+    position: absolute;
+    background: #ccc;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+#panel-resize-handle:hover {
+    background: rgb(148, 148, 148);
+}
+
+#panel-resize-handle-center {
+    position: absolute;
+    background: #ccc;
+    z-index: 11;
+    opacity: 1;
+    border: 1px solid #999;
+    border-radius: 0.3em;
+    transition: opacity 0.2s;
+}
+
+#panel-resize-handle-center:hover {
+    opacity: 1;
+    background: #aaa;
+}
+
+#panel-resize-handle-center::before,
+#panel-resize-handle-center::after {
+    content: '';
+    position: absolute;
+    background: #999;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center::before,
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center::before {
+    top: 10%;
+    bottom: 10%;
+    left: 40%;
+    width: 2px;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center::after,
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center::after {
+    top: 10%;
+    bottom: 10%;
+    left: 60%;
+    width: 2px;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center::before,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::before {
+    top: 40%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center::after,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center::after {
+    top: 60%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle,
+#chrome-web-comments-panel.slide-left #panel-resize-handle {
+    top: 0;
+    width: 3px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle {
+    left: 0;
+}
+
+#chrome-web-comments-panel.slide-left #panel-resize-handle {
+    right: 0;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle {
+    left: 0;
+    height: 3px;
+    width: 100%;
+    cursor: ns-resize;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle {
+    bottom: 0;
+}
+
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle {
+    top: 0;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center,
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center {
+    top: 50%;
+    width: 0.9em;
+    height: 3em;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+    background: #ccc;
+    display: none;
+}
+
+#chrome-web-comments-panel.slide-right #panel-resize-handle-center {
+    left: 0;
+}
+
+#chrome-web-comments-panel.slide-left #panel-resize-handle-center {
+    right: 0;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center,
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center {
+    left: 50%;
+    height: 0.9em;
+    width: 3em;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+    background: #ccc;
+}
+
+#chrome-web-comments-panel.slide-top #panel-resize-handle-center {
+    bottom: -0.45em;
+}
+
+#chrome-web-comments-panel.slide-bottom #panel-resize-handle-center {
+    top: -0.45em;
+}
+
+#mobile-bottom-panel-button {
+    position: fixed;
+    bottom: 6vh;
+    right: 15vw;
+    width: 10vh;
+    height: 10vh;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border: solid 1px #ccc;
+    cursor: pointer;
+    z-index: 9999999999999;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mobile-bottom-panel-button div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+}
+
+#mobile-comments-avail {
+    font-size: 5vh;
+    font-weight: bold;
+}
+
+#mobile-zero-comments {
+    font-size: 1.5vh;
+    line-height: 1.2;
+    padding: 0.5vh;
+}
+
+#chrome-web-comments-panel.active ~ #mobile-bottom-panel-button {
+    display: none;
+}
+
+.rules {
+    max-width: 100%;
+    background-color: white;
+}
+
+.rules h3 {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.rules ul {
+    list-style: decimal;
+    user-select: text;
+}
+
+.nav-link {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1.0em;
+    text-align: center;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.error-message {
+    text-align: center;
+    padding: 0.3em;
+    height: 1.5em;
+    color: #f00;
+}
+
+.link-section {
+    text-align: center;
+}
+
+.top-subscriptions-link {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.popup-page ul {
+    padding-left: 1.2em;
+}
+
+#recentList {
+    list-style: disc;
+    margin-left: 0.7em;
+    text-indent: -0.5em;
+}
+
+/* Debug elements - hidden by default */
+#direction-switcher {
+    display: none;
+}
+
+#panel-size-control {
+    display: none;
 }

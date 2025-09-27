@@ -7,56 +7,62 @@ function rfind(s)
 }
 
 function getSecondLevelDomain() {
-	const host = location.hostname;
-	const parts = host.split('.');
-
-	const sld = parts[parts.length - 2];
-	const tld = parts[parts.length - 1];
-
-	return `${sld}.${tld}`;
+    const hostname = location.hostname;
+    const parts = hostname.split('.');
+    if (parts.length >= 2) {
+        return parts[parts.length - 2] + '.' + parts[parts.length - 1];
+    }
+    return hostname;
 }
 
-function panelWidthKey() {
-	return "panel-width:" + getSecondLevelDomain();
+function savePanelState(state) {
+    const site = getSecondLevelDomain();
+    const key = `${site}_panelState`;
+    chrome.storage.local.set({[key]: state});
 }
 
-function panelStateKey() {
-	return "panel-state:" + getSecondLevelDomain();
+function getCurrentDirection() {
+    const panel = rfind('#chrome-web-comments-panel');
+    if (panel.hasClass('slide-left')) return 'left';
+    if (panel.hasClass('slide-top')) return 'top';
+    if (panel.hasClass('slide-bottom')) return 'bottom';
+    return 'right';
 }
 
-const panel_local_storage = {
-	getWidth: async () => {
-		const key = panelWidthKey();
-		const r = await chrome.storage.local.get(key);
-
-		let w = r?.[key];
-
-		if(w === undefined)
-			w = rfind('#chrome-web-comments-panel').width();
-
-		return w;
-	},
-
-	setWidth: (w) => {
-		const key = panelWidthKey();
-		chrome.storage.local.set({ [key]: w });
-	},
-
-	panelStateSet: (isOpened) => {
-		const key = panelStateKey();
-		chrome.storage.local.set({ [key]: isOpened });
-	},
-
-	isPanelOpened: async () => {
-		const key = panelStateKey();
-		const r = await chrome.storage.local.get(key);
-
-		return (r?.[key] === undefined) ? false : r?.[key];
-	}
-}
 
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
+const minPanelSizeRatio = 0.1;
+let panelSizeRatio = 0.4;
+let panelSizeRatios = {};
+let isResizing = false;
+let startX = 0;
+let startY = 0;
+let startRatio = 0.4;
+
+// Throttle function to limit the rate of execution
+function throttle(func, delay) {
+	let timeoutId;
+	let lastExecTime = 0;
+	return function (...args) {
+		const currentTime = Date.now();
+		if (currentTime - lastExecTime > delay) {
+			func.apply(this, args);
+			lastExecTime = currentTime;
+		} else {
+			clearTimeout(timeoutId);
+			timeoutId = setTimeout(() => {
+				func.apply(this, args);
+				lastExecTime = Date.now();
+			}, delay - (currentTime - lastExecTime));
+		}
+	};
+}
+
+function convertUrlsToLinks(text) {
+	const urlRegex = /\b([a-zA-Z][a-zA-Z+.-]{0,9}:\/\/[^/\s][^\s]*)/g;
+	return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+}
 
 const app = {
 
@@ -66,19 +72,11 @@ const app = {
 
 			await app.initCommentLists();
 			app.events();
-
-			if(await panel_local_storage.isPanelOpened())
-			{
-				if(document.comments_num > 0)
-					app.panelOpeningRoutine();
-			}
 		});
 	},
 
 	events: () => {
 		let root = rfind('#all-stuff');
-
-		app.panelResizingEventsHandler(root);
 
 		chrome.storage.onChanged.addListener(async(changes, namespace) => {
 			app.setProperSubscribedState(document.page_id);
@@ -86,10 +84,15 @@ const app = {
 
 		$(root).on('submit', '#chrome-web-comments-form', app.submitCommentEventHandler);
 		$(root).on('click', '#chrome-web-comments-panel-button', app.openPanelButtonClickHdlr);
+		$(root).on('click', '#mobile-bottom-panel-button', app.openPanelButtonClickHdlr);
 		$(root).on('submit', '.cwc-answear-form', app.submitAnswerToCommentEventHandler);
 		$(root).on('click', '.chrome-web-comments-item-answear', app.showAnswearForm);
 		$(root).on('click', '.chrome-web-comments-item-declineBtn', app.hideAnswerForm);
 		$(root).on('click', '#chrome-web-comments-panel-close', app.closePanelEventHandler);
+		$(root).on('click', '#direction-switcher button', app.directionSwitcherClick);
+		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
+		$(root).on('mousedown', '#panel-resize-handle', app.startResize);
+		$(root).on('mousedown', '#panel-resize-handle-center', app.startResize);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -97,50 +100,11 @@ const app = {
 		$(root).on('click', '.chrome-web-comments-item-deleteBtn', app.deleteComment);
 		$(root).on('click', '.report-button', app.complaintButtonPressedHdl);
 		$(root).on('click', '.reaction-button', app.reactionButtonPressedHdl);
-		$(root).on('input', '#cwc_user', () => chrome.storage.local.set({ cwc_user: $('#cwc_user').val() }) )
+		$(root).on('input', '#cwc_user', () => chrome.storage.local.set({ cwc_user: $('#cwc_user').val() }) );
+
+		$(window).on('resize', app.onWindowResize);
 	},
 
-	panelResizingEventsHandler: (root) => {
-		const panel = rfind('#chrome-web-comments-panel');
-
-		let jitter;
-		const setPanelWidth = function(absX) {
-			if(absX < minOpenPanelWidth) return;
-
-			let invWidth = window.innerWidth - absX - jitter;
-
-			if(invWidth < minOpenPanelGap) invWidth = minOpenPanelGap;
-
-			panel.css('width', `${invWidth}px`);
-		}
-
-		$(root).on('mousedown', '#chrome-web-comments-panel-resizer', (e) => {
-			let $rszr = $(e.target);
-			jitter = window.innerWidth - panel.width() - e.clientX;
-
-			$('html,body').css('cursor','ew-resize');
-			const transBackup = panel.css('transition');
-			panel.css('transition', 'none');
-
-			let currPanelWidth = e.clientX;
-			let intervalId = setInterval(() => { setPanelWidth(currPanelWidth); }, 25);
-
-			$(document).on('mouseup', (e) => {
-				$(document).off('mousemove');
-				$(document).off('mouseup');
-				clearInterval(intervalId);
-				setPanelWidth(e.clientX);
-				panel.css('transition', transBackup);
-				$('html,body').css('cursor','default');
-
-				panel_local_storage.setWidth(panel.width());
-			});
-
-			$(document).on('mousemove', (e) => {
-				currPanelWidth = e.clientX;
-			});
-		});
-	},
 
 	getURL: () => location.href.split('?')[0],
 
@@ -167,7 +131,7 @@ const app = {
 		let e = $(this);
 
 		e.closest('.chrome-web-comments-item-wrap').prev().find('.chrome-web-comments-item-user:contains("'+ e.text().replace('@', '') +'")').closest('.chrome-web-comments-item').addClass('active').delay(600).queue( next => {
-			$('.chrome-web-comments-item.active').removeClass('active');
+			rfind('.chrome-web-comments-item.active').removeClass('active');
 			next();
 		});
 	},
@@ -212,11 +176,47 @@ const app = {
 			$(e).attr("href", chrome.runtime.getURL(base));
 		});
 
+		const aspectRatio = window.innerWidth / window.innerHeight;
+		const defaultDirection = aspectRatio < 0.75 ? 'bottom' : 'right';
+		rfind('#chrome-web-comments-panel').addClass('slide-' + defaultDirection);
+
+		if (defaultDirection === 'bottom') {
+			rfind('#chrome-web-comments-panel-button').hide();
+		} else {
+			rfind('#mobile-bottom-panel-button').hide();
+		}
+
 		app.updateCounterButtonText(0);
 
 		app.setProperSubscribedState();
 
-		chrome.storage.local.get('cwc_user', data => $(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' ) );
+		const site = getSecondLevelDomain();
+		const directions = ['right', 'left', 'top', 'bottom'];
+		const stateKey = `${site}_panelState`;
+		const keys = directions.map(d => `${site}_${d}_panelSizeRatio`);
+		chrome.storage.local.get(['cwc_user', stateKey, ...keys], data => {
+			$(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' );
+			directions.forEach(d => {
+				const key = `${site}_${d}_panelSizeRatio`;
+				const defaultRatio = (d === 'top' || d === 'bottom') ? 0.75 : 0.4;
+				panelSizeRatios[d] = data[key] !== undefined ? data[key] : defaultRatio;
+			});
+			panelSizeRatio = panelSizeRatios[defaultDirection];
+			rfind('#panel-size-slider').val(panelSizeRatio);
+			rfind('#panel-size-value').text(panelSizeRatio);
+
+			const savedState = data[stateKey];
+			if (savedState === 'open') {
+				app.panelOpeningRoutine();
+			} else if (savedState === 'closed') {
+				// do nothing
+			} else {
+				// no saved state
+				if(document.comments_num > 0 && defaultDirection !== 'bottom' && defaultDirection !== 'top') {
+					app.panelOpeningRoutine();
+				}
+			}
+		});
 
 		if(data?.comments !== undefined && Object.keys(data.comments).length)
 		{
@@ -233,17 +233,21 @@ const app = {
 	updateCounterButtonText: (n) => {
 		document.comments_num += n;
 
-		rfind("#msgs-counter").text(document.comments_num);
+		rfind(".msgs-counter").text(document.comments_num);
 
 		if(document.comments_num !== undefined && document.comments_num > 0)
 		{
 			rfind('#zero-comments').hide();
 			rfind('#comments-avail').show();
+			rfind('#mobile-zero-comments').hide();
+			rfind('#mobile-comments-avail').show();
 		}
 		else
 		{
 			rfind('#zero-comments').show();
 			rfind('#comments-avail').hide();
+			rfind('#mobile-zero-comments').show();
+			rfind('#mobile-comments-avail').hide();
 		}
 	},
 
@@ -394,6 +398,7 @@ const app = {
 				if (response?.error === undefined) {
 					subscriptions.markAsReadIfSubscribed(document.page_id, response.latest_activity_id);
 
+					response.comment = convertUrlsToLinks(response.comment);
 					msg_wrap.querySelector('.chrome-web-comments-item-comment')
 						.innerHTML = response.comment;
 
@@ -516,6 +521,7 @@ const app = {
 		c.find(".chrome-web-comments-item").attr("id", args.msg_id);
 		c.find(".chrome-web-comments-item-user").text(args.author);
 		c.find(".chrome-web-comments-item-date").text(args.created);
+		args.comment = convertUrlsToLinks(args.comment);
 		c.find(".chrome-web-comments-item-comment").html(args.comment);
 		c.find('.cwc-answear-form input[name="root_id"]').attr("value", (root_id == null ? args.msg_id : root_id));
 		c.find('.cwc-answear-form input[name="parent_id"]').attr("value", args.msg_id);
@@ -536,6 +542,7 @@ const app = {
 			{ value: "thumbs_up", picture: "thumbs_up.png", title: "большой палец вверх" },
 			{ value: "thumbs_down", picture: "thumbs_down.png", title: "большой палец вниз" },
 			{ value: "laughing_face", picture: "emoji_u1f604.svg", title: "смеющееся лицо" },
+			{ value: "clapping_hands", picture: "clapping-hands_1f44f.png", title: "аплодисменты" },
 			{ value: "ok", picture: "ok_hand.png", title: "окей!" },
 			{ value: "wolf", picture: "wolves.png", title: "волк" },
 			{ value: "party_popper", picture: "party_popper.png", title: "праздник" },
@@ -618,7 +625,7 @@ const app = {
 		if( args.children && args.children.length ){
 			for( let k in args.children )
 			{
-				const child = children[k];
+				const child = args.children[k];
 				const own = await own_comments.getCommentBelongings(document.page_id, child.msg_id);
 
 				app.addAnswerToComment(root_id, child, own !== undefined);
@@ -637,45 +644,158 @@ const app = {
 	panelOpeningRoutine: async () => {
 		const panel = rfind('#chrome-web-comments-panel');
 
-		const orig_w = await panel_local_storage.getWidth();
-		let w = orig_w;
+		const payload = rfind('#panel-payload');
 
-		const gap = window.innerWidth - w;
-
-		if(gap < minOpenPanelGap)
-		{
-			w = window.innerWidth - minOpenPanelGap;
-
-			if(w < minOpenPanelWidth)
-				w = minOpenPanelWidth;
+		if (panel.hasClass('slide-top') || panel.hasClass('slide-bottom')) {
+			panel.css('width', `${window.innerWidth}px`);
+			panel.css('height', `${window.innerHeight * panelSizeRatio}px`);
+			payload.css('padding-left', '20px');
+			payload.css('padding-right', '20px');
+		} else {
+			let w = window.innerWidth * panelSizeRatio;
+			const gap = window.innerWidth - w;
+			if(gap < minOpenPanelGap) {
+				w = window.innerWidth - minOpenPanelGap;
+				if(w < minOpenPanelWidth) w = minOpenPanelWidth;
+			}
+			panel.css('width', `${w}px`);
+			panel.css('height', `${window.innerHeight}px`);
+			if (panel.hasClass('slide-right')) {
+				payload.css('padding-left', '0.7em');
+				payload.css('padding-right', '20px');
+			} else if (panel.hasClass('slide-left')) {
+				payload.css('padding-right', '0.7em');
+				payload.css('padding-left', '20px');
+			}
 		}
 
-		await panel.css('width', `${w}px`);
-		await panel.addClass('active');
-
-		panel_local_storage.panelStateSet(true);
+		panel.addClass('active');
+		savePanelState('open');
 	},
 
 	closePanelEventHandler: () => {
 		rfind('#chrome-web-comments-panel').removeClass('active');
-		panel_local_storage.panelStateSet(false);
+		savePanelState('closed');
+	},
+
+	directionSwitcherClick: function() {
+		const direction = $(this).data('direction');
+		const panel = rfind('#chrome-web-comments-panel');
+		panel.removeClass('slide-right slide-left slide-top slide-bottom');
+		panel.addClass('slide-' + direction);
+		panelSizeRatio = panelSizeRatios[direction];
+		rfind('#panel-size-slider').val(panelSizeRatio);
+		rfind('#panel-size-value').text(panelSizeRatio);
+		if (panel.hasClass('active')) {
+			panel.removeClass('active');
+			setTimeout(() => {
+				app.panelOpeningRoutine();
+			}, 300);
+		}
+	},
+
+	panelSizeChange: function() {
+		panelSizeRatio = parseFloat($(this).val());
+		const direction = getCurrentDirection();
+		const site = getSecondLevelDomain();
+		const key = `${site}_${direction}_panelSizeRatio`;
+		chrome.storage.local.set({[key]: panelSizeRatio});
+		panelSizeRatios[direction] = panelSizeRatio;
+		rfind('#panel-size-value').text(panelSizeRatio);
+		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
+			app.panelOpeningRoutine();
+		}
+	},
+
+	startResize: async function(e) {
+		isResizing = true;
+		startX = e.clientX;
+		startY = e.clientY;
+		startRatio = panelSizeRatio;
+
+		// Temporarily remove transitions for smoother resizing
+		const panel = rfind('#chrome-web-comments-panel');
+		this.originalTransition = panel.css('transition');
+		panel.css('transition', 'none');
+
+		$(document).on('mousemove', throttledResize);
+		$(document).on('mouseup', app.endResize);
+		e.preventDefault();
+	},
+
+	doResize: function(e) {
+		if (!isResizing) return;
+		const panel = rfind('#chrome-web-comments-panel');
+		let delta = 0;
+		const isVertical = panel.hasClass('slide-top') || panel.hasClass('slide-bottom');
+		const dimension = isVertical ? window.innerHeight : window.innerWidth;
+		if (panel.hasClass('slide-right')) {
+			delta = startX - e.clientX;
+		} else if (panel.hasClass('slide-left')) {
+			delta = e.clientX - startX;
+		} else if (panel.hasClass('slide-top')) {
+			delta = e.clientY - startY;
+		} else if (panel.hasClass('slide-bottom')) {
+			delta = startY - e.clientY;
+		}
+		const newRatio = Math.max(minPanelSizeRatio, Math.min(0.9, startRatio + delta / dimension));
+		if (newRatio !== panelSizeRatio) {
+			panelSizeRatio = newRatio;
+			app.panelOpeningRoutine();
+		}
+	},
+
+	endResize: function() {
+		if (isResizing) {
+			isResizing = false;
+			const direction = getCurrentDirection();
+			const site = getSecondLevelDomain();
+			const key = `${site}_${direction}_panelSizeRatio`;
+			chrome.storage.local.set({[key]: panelSizeRatio});
+			panelSizeRatios[direction] = panelSizeRatio;
+			rfind('#panel-size-slider').val(panelSizeRatio);
+			rfind('#panel-size-value').text(panelSizeRatio);
+			if ((direction === 'top' || direction === 'bottom') && panelSizeRatio <= minPanelSizeRatio) {
+				rfind('#chrome-web-comments-panel').removeClass('active');
+				savePanelState('closed');
+				chrome.storage.local.remove([key]);
+				const defaultRatio = (direction === 'top' || direction === 'bottom') ? 0.75 : 0.4;
+				panelSizeRatios[direction] = defaultRatio;
+				panelSizeRatio = defaultRatio;
+				rfind('#panel-size-slider').val(panelSizeRatio);
+				rfind('#panel-size-value').text(panelSizeRatio);
+			}
+			$(document).off('mousemove', throttledResize);
+			$(document).off('mouseup', app.endResize);
+
+			// Restore transitions
+			const panel = rfind('#chrome-web-comments-panel');
+			panel.css('transition', this.originalTransition || '');
+		}
+	},
+
+	onWindowResize: () => {
+		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
+			app.panelOpeningRoutine();
+		}
 	},
 
 	getFormData: ( e ) => {
-		data = {};
+		let data = {};
 
 		e.serializeArray().map(( e ) => {
-			if( ( val = e.value.trim() ) )
+			const val = e.value.trim();
+			if( val )
 				data[ e.name ] = val;
 		});
 		return data;
 	},
 
 	showErrorBanner: (msg) => {
-		rfind('#cwc-error').text( msg ).delay(5000).queue( next => {
+		rfind('#cwc-error').text( msg );
+		setTimeout(() => {
 			rfind('#cwc-error').text('');
-			next();
-		});
+		}, 5000);
 	},
 
 	request: async (args, post_args ={}) => {
@@ -698,5 +818,8 @@ const app = {
 		}
 	}
 }
+
+// Create throttled version of doResize
+const throttledResize = throttle(app.doResize, 16); // 60 fps
 
 app.init();

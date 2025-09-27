@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf-8">
+    <head>
+        <title>Подписки</title>
+        <link rel="stylesheet" href="/assets/style.css">
+    </head>
+    <body class="popup-page">
+        <h1 class="page-title">Подписки</h1>
+        <div id="cwc-error" class="error-message" hidden>Нет связи с сервером</div>
+        <section id="main_section">
+            <div>
+                <ul id="subscriptionsList">
+                    <template id="subscriptionItemTpl">
+                        <li class="subscriptionItem">
+                            <span class="del_or_not">
+                                <span class="approve">[ ]</span>
+                                <span class="decline" hidden>[&cross;]</span>
+                            </span>
+                            <span class="subscription-link">
+                                <span class="unread" title="Количество непрочитанных сообщений">
+                                    (<span class="unread-val"></span>)
+                                </span>
+                                <a class="page-link" target="_blank"></a>
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </section>
+        <section class="buttons">
+            <button id="unsubBtn" disabled>Отписаться от отмеченных крестиком</button>
+        </section>
+        <section>
+            &nbsp;
+        </section>
+        <section class="link-section">
+            <a href="/popup/recent.html" class="nav-link relative-href">Комментарии к другим вакансиям</a>
+        </section>
+        <script type="text/javascript" src="/assets/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="/assets/libs/jquery-ui.js"></script>
+        <script type="text/javascript" src="/assets/js/storage.js"></script>
+        <script type="text/javascript" src="popup.js"></script>
+    </body>
+</html>

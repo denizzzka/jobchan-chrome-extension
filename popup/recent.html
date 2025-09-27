@@ -5,30 +5,40 @@
         <title>Свежие комментарии</title>
         <link rel="stylesheet" href="/assets/style.css">
     </head>
-    <body>
-        <h1>Вакансии с новыми комментариями</h1>
-        <div id="cwc-error" hidden>Нет связи с сервером</div>
+    <body class="popup-page">
+        <h1 class="page-title">Вакансии с новыми комментариями</h1>
+        <section class="top-subscriptions-link">
+            <a href="/popup/subscriptions.html" class="nav-link relative-href">
+                <span class="no-unread">Подписки</span>
+                <span class="with-unread" style="display:none"><strong>Подписки (<span class="unread-num"></span>)</strong></span>
+            </a>
+        </section>
+        <div id="cwc-error" class="error-message" hidden>Нет связи с сервером</div>
         <section id="main_section">
             <div class="nav"></div>
-
             <div>
                 <ul id="recentList">
                     <template id="recentItemTpl">
                         <li class="recentItem">
-                            <nobr>
-                                <span class="subscription-link">
-                                    <a class="page-link" target="_blank"></a> -
-                                    <!-- FIXME: class "unread" is used -->
-                                    комментариев: <span class="msgs-cnt unread" title="Количество комментариев"></span>,
-                                    <span class="timestamp" title="Время создания последнего комментария"></span>
-                                </span>
-                            </nobr>
+                            <span class="subscription-link">
+                                <a class="page-link" target="_blank"></a> -
+                                <!-- FIXME: class "unread" is used -->
+                                комментариев: <span class="msgs-cnt unread" title="Количество комментариев"></span>,
+                                <span class="timestamp" title="Время создания последнего комментария"></span>
+                            </span>
                         </li>
                     </template>
                 </ul>
             </div>
 
-            <div class="nav"></div>
+        <div class="nav"></div>
+
+        <section class="link-section">
+            <a href="/popup/subscriptions.html" class="nav-link relative-href">
+                <span class="no-unread">Подписки</span>
+                <span class="with-unread" style="display:none"><strong>Подписки (<span class="unread-num"></span>)</strong></span>
+            </a>
+        </section>
 
         </section>
         <script type="text/javascript" src="/assets/libs/jquery.min.js"></script>
