@@ -753,6 +753,16 @@ const app = {
 			panelSizeRatios[direction] = panelSizeRatio;
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
+			if (panelSizeRatio < 0.12) {
+				rfind('#chrome-web-comments-panel').removeClass('active');
+				savePanelState('closed');
+				chrome.storage.local.remove([key]);
+				const defaultRatio = (direction === 'top' || direction === 'bottom') ? 0.75 : 0.4;
+				panelSizeRatios[direction] = defaultRatio;
+				panelSizeRatio = defaultRatio;
+				rfind('#panel-size-slider').val(panelSizeRatio);
+				rfind('#panel-size-value').text(panelSizeRatio);
+			}
 			$(document).off('mousemove', throttledResize);
 			$(document).off('mouseup', app.endResize);
 
