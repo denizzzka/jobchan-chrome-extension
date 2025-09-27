@@ -198,7 +198,7 @@ const app = {
 			$(shadow).find('#cwc_user').val( data['cwc_user'] ? data['cwc_user'] : 'Аноним' );
 			directions.forEach(d => {
 				const key = `${site}_${d}_panelSizeRatio`;
-				const defaultRatio = (d === 'top' || d === 'bottom') ? 0.75 : 0.4;
+				const defaultRatio = (d === 'top' || d === 'bottom') ? 0.8 : 0.4;
 				panelSizeRatios[d] = data[key] !== undefined ? data[key] : defaultRatio;
 			});
 			panelSizeRatio = panelSizeRatios[defaultDirection];
@@ -636,9 +636,11 @@ const app = {
 	openPanelButtonClickHdlr: async (e) => {
 		await app.panelOpeningRoutine();
 
-		const p = rfind('#chrome-web-comments-form textarea[name="comment"]');
-
-		setTimeout(() => { p.focus(); }, 100);
+		const direction = getCurrentDirection();
+		if (direction !== 'top' && direction !== 'bottom') {
+			const p = rfind('#chrome-web-comments-form textarea[name="comment"]');
+			setTimeout(() => { p.focus(); }, 100);
+		}
 	},
 
 	panelOpeningRoutine: async () => {

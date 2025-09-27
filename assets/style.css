@@ -555,8 +555,8 @@ img.pict {
 
 #mobile-bottom-panel-button {
     position: fixed;
-    bottom: 6vh;
-    right: 15vw;
+    bottom: 3vh;
+    right: 10vw;
     width: 10vh;
     height: 10vh;
     border-radius: 50%;
@@ -585,7 +585,7 @@ img.pict {
 }
 
 #mobile-zero-comments {
-    font-size: 1.5vh;
+    font-size: 1.4vh;
     line-height: 1.2;
     padding: 0.5vh;
 }
