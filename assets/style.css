@@ -595,7 +595,7 @@ img.pict {
 
 .rules {
     max-width: 100%;
-    background-color: gainsboro;
+    background-color: white;
 }
 
 .rules h3 {
@@ -617,4 +617,25 @@ img.pict {
 
 .nav-link:hover {
     text-decoration: underline;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.error-message {
+    text-align: center;
+    padding: 0.3em;
+    height: 1.5em;
+    color: #f00;
+}
+
+.link-section {
+    text-align: center;
+}
+
+.top-subscriptions-link {
+    text-align: center;
+    margin-bottom: 10px;
 }
