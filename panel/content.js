@@ -636,9 +636,11 @@ const app = {
 	openPanelButtonClickHdlr: async (e) => {
 		await app.panelOpeningRoutine();
 
-		const p = rfind('#chrome-web-comments-form textarea[name="comment"]');
-
-		setTimeout(() => { p.focus(); }, 100);
+		const direction = getCurrentDirection();
+		if (direction !== 'top' && direction !== 'bottom') {
+			const p = rfind('#chrome-web-comments-form textarea[name="comment"]');
+			setTimeout(() => { p.focus(); }, 100);
+		}
 	},
 
 	panelOpeningRoutine: async () => {
