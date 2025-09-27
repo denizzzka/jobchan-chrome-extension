@@ -32,6 +32,7 @@ function getCurrentDirection() {
 
 const minOpenPanelGap = 130;
 const minOpenPanelWidth = 30;
+const minPanelSizeRatio = 0.1;
 let panelSizeRatio = 0.4;
 let panelSizeRatios = {};
 let isResizing = false;
@@ -736,7 +737,7 @@ const app = {
 		} else if (panel.hasClass('slide-bottom')) {
 			delta = startY - e.clientY;
 		}
-		const newRatio = Math.max(0.1, Math.min(0.9, startRatio + delta / dimension));
+		const newRatio = Math.max(minPanelSizeRatio, Math.min(0.9, startRatio + delta / dimension));
 		if (newRatio !== panelSizeRatio) {
 			panelSizeRatio = newRatio;
 			app.panelOpeningRoutine();
@@ -753,7 +754,7 @@ const app = {
 			panelSizeRatios[direction] = panelSizeRatio;
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
-			if (panelSizeRatio < 0.12) {
+			if (panelSizeRatio <= minPanelSizeRatio) {
 				rfind('#chrome-web-comments-panel').removeClass('active');
 				savePanelState('closed');
 				chrome.storage.local.remove([key]);
