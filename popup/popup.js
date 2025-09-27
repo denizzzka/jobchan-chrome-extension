@@ -70,3 +70,10 @@ $(document).on('click', '#unsubBtn', async function(e) {
 
     window.location.reload();
 });
+
+$(document).on('auxclick', '.page-link', function(e) {
+    if (e.button === 1) { // Middle mouse button
+        e.preventDefault();
+        chrome.tabs.create({ url: $(this).attr('href'), active: false });
+    }
+});

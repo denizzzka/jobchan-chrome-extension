@@ -98,3 +98,10 @@ async function request(args, post_args ={})
         console.log("Нет связи с сервером?", err);
     }
 }
+
+$(document).on('auxclick', '.page-link', function(e) {
+    if (e.button === 1) { // Middle mouse button
+        e.preventDefault();
+        chrome.tabs.create({ url: $(this).attr('href'), active: false });
+    }
+});
