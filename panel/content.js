@@ -202,6 +202,7 @@ const app = {
 			});
 			panelSizeRatio = panelSizeRatios[defaultDirection];
 			rfind('#panel-size-slider').val(panelSizeRatio);
+			rfind('#panel-size-value').text(panelSizeRatio);
 
 			const savedState = data[stateKey];
 			if (savedState === 'open') {
@@ -682,6 +683,7 @@ const app = {
 		panel.addClass('slide-' + direction);
 		panelSizeRatio = panelSizeRatios[direction];
 		rfind('#panel-size-slider').val(panelSizeRatio);
+		rfind('#panel-size-value').text(panelSizeRatio);
 		if (panel.hasClass('active')) {
 			panel.removeClass('active');
 			setTimeout(() => {
@@ -697,6 +699,7 @@ const app = {
 		const key = `${site}_${direction}_panelSizeRatio`;
 		chrome.storage.local.set({[key]: panelSizeRatio});
 		panelSizeRatios[direction] = panelSizeRatio;
+		rfind('#panel-size-value').text(panelSizeRatio);
 		if (rfind('#chrome-web-comments-panel').hasClass('active')) {
 			app.panelOpeningRoutine();
 		}
@@ -749,6 +752,7 @@ const app = {
 			chrome.storage.local.set({[key]: panelSizeRatio});
 			panelSizeRatios[direction] = panelSizeRatio;
 			rfind('#panel-size-slider').val(panelSizeRatio);
+			rfind('#panel-size-value').text(panelSizeRatio);
 			$(document).off('mousemove', throttledResize);
 			$(document).off('mouseup', app.endResize);
 
