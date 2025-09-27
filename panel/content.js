@@ -212,7 +212,7 @@ const app = {
 				// do nothing
 			} else {
 				// no saved state
-				if(document.comments_num > 0) {
+				if(document.comments_num > 0 && defaultDirection !== 'bottom' && defaultDirection !== 'top') {
 					app.panelOpeningRoutine();
 				}
 			}
