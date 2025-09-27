@@ -650,3 +650,12 @@ img.pict {
     margin-left: 0.7em;
     text-indent: -0.5em;
 }
+
+/* Debug elements - hidden by default */
+#direction-switcher {
+    display: none;
+}
+
+#panel-size-control {
+    display: none;
+}
