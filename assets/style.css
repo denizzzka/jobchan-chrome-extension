@@ -422,12 +422,12 @@ img.pict {
     position: absolute;
     background: #ccc;
     z-index: 10;
-    opacity: 0.5;
+    opacity: 1;
     transition: opacity 0.2s;
 }
 
 #panel-resize-handle:hover {
-    opacity: 1;
+    background: rgb(148, 148, 148);
 }
 
 #panel-resize-handle-center {
