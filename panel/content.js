@@ -187,6 +187,10 @@ const app = {
 			rfind('#mobile-bottom-panel-button').hide();
 		}
 
+		if ('ontouchstart' in window) {
+			rfind('#chrome-web-comments-panel').on('touchstart', app.startResize);
+		}
+
 		app.updateCounterButtonText(0);
 
 		app.setProperSubscribedState();
@@ -716,8 +720,17 @@ const app = {
 
 	startResize: async function(e) {
 		isResizing = true;
-		startX = e.clientX;
-		startY = e.clientY;
+		if (e.touches) {
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+			$(document).on('touchmove', throttledResize);
+			$(document).on('touchend', app.endResize);
+		} else {
+			startX = e.clientX;
+			startY = e.clientY;
+			$(document).on('mousemove', throttledResize);
+			$(document).on('mouseup', app.endResize);
+		}
 		startRatio = panelSizeRatio;
 
 		// Temporarily remove transitions for smoother resizing
@@ -725,8 +738,6 @@ const app = {
 		this.originalTransition = panel.css('transition');
 		panel.css('transition', 'none');
 
-		$(document).on('mousemove', throttledResize);
-		$(document).on('mouseup', app.endResize);
 		e.preventDefault();
 	},
 
@@ -734,16 +745,24 @@ const app = {
 		if (!isResizing) return;
 		const panel = rfind('#chrome-web-comments-panel');
 		let delta = 0;
+		let clientX, clientY;
+		if (e.touches) {
+			clientX = e.touches[0].clientX;
+			clientY = e.touches[0].clientY;
+		} else {
+			clientX = e.clientX;
+			clientY = e.clientY;
+		}
 		const isVertical = panel.hasClass('slide-top') || panel.hasClass('slide-bottom');
 		const dimension = isVertical ? window.innerHeight : window.innerWidth;
 		if (panel.hasClass('slide-right')) {
-			delta = startX - e.clientX;
+			delta = startX - clientX;
 		} else if (panel.hasClass('slide-left')) {
-			delta = e.clientX - startX;
+			delta = clientX - startX;
 		} else if (panel.hasClass('slide-top')) {
-			delta = e.clientY - startY;
+			delta = clientY - startY;
 		} else if (panel.hasClass('slide-bottom')) {
-			delta = startY - e.clientY;
+			delta = startY - clientY;
 		}
 		const newRatio = Math.max(minPanelSizeRatio, Math.min(0.9, startRatio + delta / dimension));
 		if (newRatio !== panelSizeRatio) {
@@ -773,7 +792,9 @@ const app = {
 				rfind('#panel-size-value').text(panelSizeRatio);
 			}
 			$(document).off('mousemove', throttledResize);
+			$(document).off('touchmove', throttledResize);
 			$(document).off('mouseup', app.endResize);
+			$(document).off('touchend', app.endResize);
 
 			// Restore transitions
 			const panel = rfind('#chrome-web-comments-panel');
