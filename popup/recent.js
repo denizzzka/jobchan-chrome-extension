@@ -96,6 +96,9 @@ async function request(args, post_args ={})
         $('#cwc-error').show();
 
         console.log("Нет связи с сервером?", err);
+
+        // Return default response to prevent undefined access
+        return { total: 0, recently_commented_list: [] };
     }
 }
 

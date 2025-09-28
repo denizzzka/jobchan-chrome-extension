@@ -177,13 +177,18 @@ const app = {
 		});
 
 		const aspectRatio = window.innerWidth / window.innerHeight;
-		const defaultDirection = aspectRatio < 0.75 ? 'bottom' : 'right';
+		window.isMobile = aspectRatio < 0.75;
+		const defaultDirection = window.isMobile ? 'bottom' : 'right';
 		rfind('#chrome-web-comments-panel').addClass('slide-' + defaultDirection);
 
-		if (defaultDirection === 'bottom') {
+		if (window.isMobile) {
 			rfind('#chrome-web-comments-panel-button').hide();
 		} else {
 			rfind('#mobile-bottom-panel-button').hide();
+		}
+
+		if ('ontouchstart' in window) {
+			rfind('#chrome-web-comments-panel').on('touchstart', app.startResize);
 		}
 
 		app.updateCounterButtonText(0);
@@ -241,6 +246,8 @@ const app = {
 			rfind('#comments-avail').show();
 			rfind('#mobile-zero-comments').hide();
 			rfind('#mobile-comments-avail').show();
+			rfind('.circular-text').show();
+			rfind('#mobile-bottom-panel-button').attr('title', 'Количество комментариев');
 		}
 		else
 		{
@@ -248,6 +255,8 @@ const app = {
 			rfind('#comments-avail').hide();
 			rfind('#mobile-zero-comments').show();
 			rfind('#mobile-comments-avail').hide();
+			rfind('.circular-text').hide();
+			rfind('#mobile-bottom-panel-button').removeAttr('title');
 		}
 	},
 
@@ -710,35 +719,79 @@ const app = {
 	},
 
 	startResize: async function(e) {
-		isResizing = true;
-		startX = e.clientX;
-		startY = e.clientY;
-		startRatio = panelSizeRatio;
+		if (e.touches) {
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+			isResizing = false; // will set to true on move if threshold exceeded
+			document.addEventListener('touchmove', app.doResize, { passive: false });
+			document.addEventListener('touchend', app.endResize, { passive: false });
+		} else {
+			isResizing = true;
+			startX = e.clientX;
+			startY = e.clientY;
+			document.addEventListener('mousemove', throttledResize);
+			document.addEventListener('mouseup', app.endResize);
+			startRatio = panelSizeRatio;
 
-		// Temporarily remove transitions for smoother resizing
-		const panel = rfind('#chrome-web-comments-panel');
-		this.originalTransition = panel.css('transition');
-		panel.css('transition', 'none');
+			// Temporarily remove transitions for smoother resizing
+			const panel = rfind('#chrome-web-comments-panel');
+			this.originalTransition = panel.css('transition');
+			panel.css('transition', 'none');
 
-		$(document).on('mousemove', throttledResize);
-		$(document).on('mouseup', app.endResize);
-		e.preventDefault();
+			e.preventDefault();
+		}
 	},
 
 	doResize: function(e) {
-		if (!isResizing) return;
+		let clientX, clientY;
+		if (e.touches) {
+			clientX = e.touches[0].clientX;
+			clientY = e.touches[0].clientY;
+			e.preventDefault(); // prevent page scrolling on touch
+		} else {
+			clientX = e.clientX;
+			clientY = e.clientY;
+		}
+
+		if (!isResizing) {
+			// For touch, check if moved enough to start resizing
+			if (e.touches) {
+				const deltaX = Math.abs(clientX - startX);
+				const deltaY = Math.abs(clientY - startY);
+				const threshold = 10; // pixels
+				if (deltaX > threshold || deltaY > threshold) {
+					isResizing = true;
+					startRatio = panelSizeRatio;
+					// Temporarily remove transitions for smoother resizing
+					const panel = rfind('#chrome-web-comments-panel');
+					this.originalTransition = panel.css('transition');
+					panel.css('transition', 'none');
+					// Prevent page scrolling during resize
+					this.originalBodyOverflow = $('body').css('overflow');
+					$('body').css('overflow', 'hidden');
+					// Prevent touch scrolling on the panel
+					this.originalTouchAction = panel.css('touch-action');
+					panel.css('touch-action', 'none');
+				} else {
+					return;
+				}
+			} else {
+				return; // shouldn't happen
+			}
+		}
+
 		const panel = rfind('#chrome-web-comments-panel');
 		let delta = 0;
 		const isVertical = panel.hasClass('slide-top') || panel.hasClass('slide-bottom');
 		const dimension = isVertical ? window.innerHeight : window.innerWidth;
 		if (panel.hasClass('slide-right')) {
-			delta = startX - e.clientX;
+			delta = startX - clientX;
 		} else if (panel.hasClass('slide-left')) {
-			delta = e.clientX - startX;
+			delta = clientX - startX;
 		} else if (panel.hasClass('slide-top')) {
-			delta = e.clientY - startY;
+			delta = clientY - startY;
 		} else if (panel.hasClass('slide-bottom')) {
-			delta = startY - e.clientY;
+			delta = startY - clientY;
 		}
 		const newRatio = Math.max(minPanelSizeRatio, Math.min(0.9, startRatio + delta / dimension));
 		if (newRatio !== panelSizeRatio) {
@@ -758,7 +811,10 @@ const app = {
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
 			if ((direction === 'top' || direction === 'bottom') && panelSizeRatio <= minPanelSizeRatio) {
-				rfind('#chrome-web-comments-panel').removeClass('active');
+				const panel = rfind('#chrome-web-comments-panel');
+				// Restore transition for smooth close
+				panel.css('transition', this.originalTransition || '');
+				panel.removeClass('active');
 				savePanelState('closed');
 				chrome.storage.local.remove([key]);
 				const defaultRatio = (direction === 'top' || direction === 'bottom') ? 0.75 : 0.4;
@@ -767,13 +823,24 @@ const app = {
 				rfind('#panel-size-slider').val(panelSizeRatio);
 				rfind('#panel-size-value').text(panelSizeRatio);
 			}
-			$(document).off('mousemove', throttledResize);
-			$(document).off('mouseup', app.endResize);
 
 			// Restore transitions
 			const panel = rfind('#chrome-web-comments-panel');
 			panel.css('transition', this.originalTransition || '');
+			// Restore body overflow
+			if (this.originalBodyOverflow !== undefined) {
+				$('body').css('overflow', this.originalBodyOverflow);
+			}
+			// Restore touch-action
+			if (this.originalTouchAction !== undefined) {
+				panel.css('touch-action', this.originalTouchAction);
+			}
 		}
+
+		document.removeEventListener('mousemove', throttledResize);
+		document.removeEventListener('touchmove', throttledResize);
+		document.removeEventListener('mouseup', app.endResize);
+		document.removeEventListener('touchend', app.endResize);
 	},
 
 	onWindowResize: () => {
