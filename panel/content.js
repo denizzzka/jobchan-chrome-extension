@@ -243,6 +243,7 @@ const app = {
 			rfind('#mobile-zero-comments').hide();
 			rfind('#mobile-comments-avail').show();
 			rfind('.circular-text').show();
+			rfind('#mobile-bottom-panel-button').attr('title', 'Количество комментариев');
 		}
 		else
 		{
@@ -251,6 +252,7 @@ const app = {
 			rfind('#mobile-zero-comments').show();
 			rfind('#mobile-comments-avail').hide();
 			rfind('.circular-text').hide();
+			rfind('#mobile-bottom-panel-button').removeAttr('title');
 		}
 	},
 
