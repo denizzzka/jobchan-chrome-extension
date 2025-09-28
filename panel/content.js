@@ -723,7 +723,7 @@ const app = {
 			startX = e.touches[0].clientX;
 			startY = e.touches[0].clientY;
 			isResizing = false; // will set to true on move if threshold exceeded
-			document.addEventListener('touchmove', throttledResize, { passive: false });
+			document.addEventListener('touchmove', app.doResize, { passive: false });
 			document.addEventListener('touchend', app.endResize, { passive: false });
 		} else {
 			isResizing = true;
@@ -811,7 +811,10 @@ const app = {
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
 			if ((direction === 'top' || direction === 'bottom') && panelSizeRatio <= minPanelSizeRatio) {
-				rfind('#chrome-web-comments-panel').removeClass('active');
+				const panel = rfind('#chrome-web-comments-panel');
+				// Restore transition for smooth close
+				panel.css('transition', this.originalTransition || '');
+				panel.removeClass('active');
 				savePanelState('closed');
 				chrome.storage.local.remove([key]);
 				const defaultRatio = (direction === 'top' || direction === 'bottom') ? 0.75 : 0.4;
