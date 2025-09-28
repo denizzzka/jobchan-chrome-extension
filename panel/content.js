@@ -177,6 +177,13 @@ const app = {
 			$(e).attr("href", chrome.runtime.getURL(base));
 		});
 
+		// Prevent main page scrolling when touching textareas
+		$(shadow).find('textarea').on('touchmove', function(e) {
+			if (this.scrollHeight <= this.clientHeight) {
+				e.preventDefault();
+			}
+		});
+
 		const aspectRatio = window.innerWidth / window.innerHeight;
 		window.isMobile = aspectRatio < 0.75;
 		const defaultDirection = window.isMobile ? 'bottom' : 'right';

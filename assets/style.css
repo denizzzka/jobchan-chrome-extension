@@ -150,6 +150,7 @@ TODO: rename chrome-web-comments-* to usual short names
     padding: 0.2em;
     box-sizing: border-box;
     touch-action: auto;
+    overscroll-behavior: contain;
 }
 
 #chrome-web-comments-form label button[name="add"]{
@@ -243,6 +244,7 @@ TODO: rename chrome-web-comments-* to usual short names
     outline: none;
     border: solid 1px #ccc;
     touch-action: auto;
+    overscroll-behavior: contain;
 }
 
 .cwc-answear-form-buttons{
