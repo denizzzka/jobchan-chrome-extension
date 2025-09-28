@@ -177,7 +177,8 @@ const app = {
 		});
 
 		const aspectRatio = window.innerWidth / window.innerHeight;
-		const defaultDirection = aspectRatio < 0.75 ? 'bottom' : 'right';
+		window.isMobile = aspectRatio < 0.75;
+		const defaultDirection = window.isMobile ? 'bottom' : 'right';
 		rfind('#chrome-web-comments-panel').addClass('slide-' + defaultDirection);
 
 		if (defaultDirection === 'bottom') {
