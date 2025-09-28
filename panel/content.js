@@ -716,8 +716,9 @@ const app = {
 	},
 
 	startResize: async function(e) {
-		// Prevent resize if touch starts inside the comments list
-		if ($(e.target).closest('#chrome-web-comments-lists').length) {
+		// Prevent resize if touch starts on interactive controls
+		if ($(e.target).is('button, input, textarea, select, a') ||
+		    $(e.target).closest('button, input, textarea, select, a').length) {
 			return;
 		}
 		isResizing = true;
