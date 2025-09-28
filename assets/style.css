@@ -381,7 +381,6 @@ img.pict {
     margin-bottom: 1em;
     margin-top: 5px;
     padding: 2px;
-    zoom:1.5;
     display: flex;
     gap: 0.2em;
     flex-wrap: wrap;
@@ -644,6 +643,14 @@ img.pict {
 
 .nav-link:hover {
     text-decoration: underline;
+}
+
+.popup-page .nav-link {
+    font-size: 18px;
+}
+
+.popup-page .nav {
+    font-size: 20px;
 }
 
 .page-title {
