@@ -719,32 +719,30 @@ const app = {
 	},
 
 	startResize: async function(e) {
-		isResizing = true;
 		if (e.touches) {
 			startX = e.touches[0].clientX;
 			startY = e.touches[0].clientY;
+			isResizing = false; // will set to true on move if threshold exceeded
 			$(document).on('touchmove', throttledResize);
 			$(document).on('touchend', app.endResize);
 		} else {
+			isResizing = true;
 			startX = e.clientX;
 			startY = e.clientY;
 			$(document).on('mousemove', throttledResize);
 			$(document).on('mouseup', app.endResize);
+			startRatio = panelSizeRatio;
+
+			// Temporarily remove transitions for smoother resizing
+			const panel = rfind('#chrome-web-comments-panel');
+			this.originalTransition = panel.css('transition');
+			panel.css('transition', 'none');
+
+			e.preventDefault();
 		}
-		startRatio = panelSizeRatio;
-
-		// Temporarily remove transitions for smoother resizing
-		const panel = rfind('#chrome-web-comments-panel');
-		this.originalTransition = panel.css('transition');
-		panel.css('transition', 'none');
-
-		e.preventDefault();
 	},
 
 	doResize: function(e) {
-		if (!isResizing) return;
-		const panel = rfind('#chrome-web-comments-panel');
-		let delta = 0;
 		let clientX, clientY;
 		if (e.touches) {
 			clientX = e.touches[0].clientX;
@@ -753,6 +751,31 @@ const app = {
 			clientX = e.clientX;
 			clientY = e.clientY;
 		}
+
+		if (!isResizing) {
+			// For touch, check if moved enough to start resizing
+			if (e.touches) {
+				const deltaX = Math.abs(clientX - startX);
+				const deltaY = Math.abs(clientY - startY);
+				const threshold = 10; // pixels
+				if (deltaX > threshold || deltaY > threshold) {
+					isResizing = true;
+					startRatio = panelSizeRatio;
+					// Temporarily remove transitions for smoother resizing
+					const panel = rfind('#chrome-web-comments-panel');
+					this.originalTransition = panel.css('transition');
+					panel.css('transition', 'none');
+					e.preventDefault(); // now prevent scrolling
+				} else {
+					return;
+				}
+			} else {
+				return; // shouldn't happen
+			}
+		}
+
+		const panel = rfind('#chrome-web-comments-panel');
+		let delta = 0;
 		const isVertical = panel.hasClass('slide-top') || panel.hasClass('slide-bottom');
 		const dimension = isVertical ? window.innerHeight : window.innerWidth;
 		if (panel.hasClass('slide-right')) {
@@ -791,15 +814,16 @@ const app = {
 				rfind('#panel-size-slider').val(panelSizeRatio);
 				rfind('#panel-size-value').text(panelSizeRatio);
 			}
-			$(document).off('mousemove', throttledResize);
-			$(document).off('touchmove', throttledResize);
-			$(document).off('mouseup', app.endResize);
-			$(document).off('touchend', app.endResize);
 
 			// Restore transitions
 			const panel = rfind('#chrome-web-comments-panel');
 			panel.css('transition', this.originalTransition || '');
 		}
+
+		$(document).off('mousemove', throttledResize);
+		$(document).off('touchmove', throttledResize);
+		$(document).off('mouseup', app.endResize);
+		$(document).off('touchend', app.endResize);
 	},
 
 	onWindowResize: () => {
