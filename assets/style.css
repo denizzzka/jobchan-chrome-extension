@@ -67,6 +67,7 @@ TODO: rename chrome-web-comments-* to usual short names
 #touch-resizer {
     width: 100%;
     box-sizing: border-box;
+    touch-action: auto;
 }
 
 #chrome-web-comments-panel-button{
@@ -381,7 +382,6 @@ img.pict {
     margin-bottom: 1em;
     margin-top: 5px;
     padding: 2px;
-    zoom:1.5;
     display: flex;
     gap: 0.2em;
     flex-wrap: wrap;
@@ -644,6 +644,14 @@ img.pict {
 
 .nav-link:hover {
     text-decoration: underline;
+}
+
+.popup-page .nav-link {
+    font-size: 18px;
+}
+
+.popup-page .nav {
+    font-size: 20px;
 }
 
 .page-title {

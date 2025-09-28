@@ -93,7 +93,7 @@ const app = {
 		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
 		$(root).on('mousedown', '#panel-resize-handle', app.startResize);
 		$(root).on('mousedown', '#panel-resize-handle-center', app.startResize);
-		$(root).on('touchstart', '#touch-resizer', app.startResize);
+		$(root).on('touchmove', '#touch-resizer', app.startResize);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -723,11 +723,7 @@ const app = {
 	},
 
 	startResize: async function(e) {
-		// Prevent resize if touch starts on interactive controls
-		if ($(e.target).is('button, input, textarea, select, a') ||
-		    $(e.target).closest('button, input, textarea, select, a').length) {
-			return;
-		}
+		if (isResizing) return; // Prevent multiple starts
 		isResizing = true;
 		if (e.touches) {
 			startX = e.touches[0].clientX;
@@ -790,7 +786,7 @@ const app = {
 			panelSizeRatios[direction] = panelSizeRatio;
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
-			if ((direction === 'top' || direction === 'bottom') && panelSizeRatio <= minPanelSizeRatio) {
+			if (panelSizeRatio <= minPanelSizeRatio) {
 				rfind('#chrome-web-comments-panel').removeClass('active');
 				savePanelState('closed');
 				chrome.storage.local.remove([key]);
