@@ -67,6 +67,7 @@ TODO: rename chrome-web-comments-* to usual short names
 #touch-resizer {
     width: 100%;
     box-sizing: border-box;
+    touch-action: auto;
 }
 
 #chrome-web-comments-panel-button{
