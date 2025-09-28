@@ -168,6 +168,7 @@ TODO: rename chrome-web-comments-* to usual short names
     padding-right: 0.5em;
     padding-bottom: 1.8em;
     touch-action: auto;
+    overscroll-behavior: contain;
 }
 
 .chrome-web-comments-item-wrap{
