@@ -93,6 +93,7 @@ const app = {
 		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
 		$(root).on('mousedown', '#panel-resize-handle', app.startResize);
 		$(root).on('mousedown', '#panel-resize-handle-center', app.startResize);
+		$(root).on('touchstart', '#touch-resizer', app.startResize);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -176,6 +177,13 @@ const app = {
 			$(e).attr("href", chrome.runtime.getURL(base));
 		});
 
+		// Prevent main page scrolling when touching textareas
+		$(shadow).find('textarea').on('touchmove', function(e) {
+			if (this.scrollHeight <= this.clientHeight) {
+				e.preventDefault();
+			}
+		});
+
 		const aspectRatio = window.innerWidth / window.innerHeight;
 		window.isMobile = aspectRatio < 0.75;
 		const defaultDirection = window.isMobile ? 'bottom' : 'right';
@@ -185,10 +193,6 @@ const app = {
 			rfind('#chrome-web-comments-panel-button').hide();
 		} else {
 			rfind('#mobile-bottom-panel-button').hide();
-		}
-
-		if ('ontouchstart' in window) {
-			rfind('#chrome-web-comments-panel').on('touchstart', app.startResize);
 		}
 
 		app.updateCounterButtonText(0);
@@ -719,69 +723,45 @@ const app = {
 	},
 
 	startResize: async function(e) {
+		// Prevent resize if touch starts on interactive controls
+		if ($(e.target).is('button, input, textarea, select, a') ||
+		    $(e.target).closest('button, input, textarea, select, a').length) {
+			return;
+		}
+		isResizing = true;
 		if (e.touches) {
 			startX = e.touches[0].clientX;
 			startY = e.touches[0].clientY;
-			isResizing = false; // will set to true on move if threshold exceeded
-			document.addEventListener('touchmove', app.doResize, { passive: false });
-			document.addEventListener('touchend', app.endResize, { passive: false });
+			$(document).on('touchmove', throttledResize);
+			$(document).on('touchend', app.endResize);
 		} else {
-			isResizing = true;
 			startX = e.clientX;
 			startY = e.clientY;
-			document.addEventListener('mousemove', throttledResize);
-			document.addEventListener('mouseup', app.endResize);
-			startRatio = panelSizeRatio;
-
-			// Temporarily remove transitions for smoother resizing
-			const panel = rfind('#chrome-web-comments-panel');
-			this.originalTransition = panel.css('transition');
-			panel.css('transition', 'none');
-
-			e.preventDefault();
+			$(document).on('mousemove', throttledResize);
+			$(document).on('mouseup', app.endResize);
 		}
+		startRatio = panelSizeRatio;
+
+		// Temporarily remove transitions for smoother resizing
+		const panel = rfind('#chrome-web-comments-panel');
+		this.originalTransition = panel.css('transition');
+		panel.css('transition', 'none');
+
+		e.preventDefault();
 	},
 
 	doResize: function(e) {
+		if (!isResizing) return;
+		const panel = rfind('#chrome-web-comments-panel');
+		let delta = 0;
 		let clientX, clientY;
 		if (e.touches) {
 			clientX = e.touches[0].clientX;
 			clientY = e.touches[0].clientY;
-			e.preventDefault(); // prevent page scrolling on touch
 		} else {
 			clientX = e.clientX;
 			clientY = e.clientY;
 		}
-
-		if (!isResizing) {
-			// For touch, check if moved enough to start resizing
-			if (e.touches) {
-				const deltaX = Math.abs(clientX - startX);
-				const deltaY = Math.abs(clientY - startY);
-				const threshold = 10; // pixels
-				if (deltaX > threshold || deltaY > threshold) {
-					isResizing = true;
-					startRatio = panelSizeRatio;
-					// Temporarily remove transitions for smoother resizing
-					const panel = rfind('#chrome-web-comments-panel');
-					this.originalTransition = panel.css('transition');
-					panel.css('transition', 'none');
-					// Prevent page scrolling during resize
-					this.originalBodyOverflow = $('body').css('overflow');
-					$('body').css('overflow', 'hidden');
-					// Prevent touch scrolling on the panel
-					this.originalTouchAction = panel.css('touch-action');
-					panel.css('touch-action', 'none');
-				} else {
-					return;
-				}
-			} else {
-				return; // shouldn't happen
-			}
-		}
-
-		const panel = rfind('#chrome-web-comments-panel');
-		let delta = 0;
 		const isVertical = panel.hasClass('slide-top') || panel.hasClass('slide-bottom');
 		const dimension = isVertical ? window.innerHeight : window.innerWidth;
 		if (panel.hasClass('slide-right')) {
@@ -811,10 +791,7 @@ const app = {
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
 			if ((direction === 'top' || direction === 'bottom') && panelSizeRatio <= minPanelSizeRatio) {
-				const panel = rfind('#chrome-web-comments-panel');
-				// Restore transition for smooth close
-				panel.css('transition', this.originalTransition || '');
-				panel.removeClass('active');
+				rfind('#chrome-web-comments-panel').removeClass('active');
 				savePanelState('closed');
 				chrome.storage.local.remove([key]);
 				const defaultRatio = (direction === 'top' || direction === 'bottom') ? 0.75 : 0.4;
@@ -823,24 +800,15 @@ const app = {
 				rfind('#panel-size-slider').val(panelSizeRatio);
 				rfind('#panel-size-value').text(panelSizeRatio);
 			}
+			$(document).off('mousemove', throttledResize);
+			$(document).off('touchmove', throttledResize);
+			$(document).off('mouseup', app.endResize);
+			$(document).off('touchend', app.endResize);
 
 			// Restore transitions
 			const panel = rfind('#chrome-web-comments-panel');
 			panel.css('transition', this.originalTransition || '');
-			// Restore body overflow
-			if (this.originalBodyOverflow !== undefined) {
-				$('body').css('overflow', this.originalBodyOverflow);
-			}
-			// Restore touch-action
-			if (this.originalTouchAction !== undefined) {
-				panel.css('touch-action', this.originalTouchAction);
-			}
 		}
-
-		document.removeEventListener('mousemove', throttledResize);
-		document.removeEventListener('touchmove', throttledResize);
-		document.removeEventListener('mouseup', app.endResize);
-		document.removeEventListener('touchend', app.endResize);
 	},
 
 	onWindowResize: () => {

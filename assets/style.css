@@ -8,6 +8,7 @@ TODO: rename chrome-web-comments-* to usual short names
     visibility: hidden;
     transition: right .3s, left .3s, top .3s, bottom .3s;
     z-index: 9999999999999;
+    touch-action: none;
 }
 
 #chrome-web-comments-panel.slide-right{
@@ -61,6 +62,11 @@ TODO: rename chrome-web-comments-* to usual short names
     box-shadow: 0px 0px 10px 5px #ccc;
     display: flex;
     flex-direction: column;
+}
+
+#touch-resizer {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #chrome-web-comments-panel-button{
@@ -143,6 +149,8 @@ TODO: rename chrome-web-comments-* to usual short names
     border: solid 1px #ccc;
     padding: 0.2em;
     box-sizing: border-box;
+    touch-action: auto;
+    overscroll-behavior: contain;
 }
 
 #chrome-web-comments-form label button[name="add"]{
@@ -160,6 +168,8 @@ TODO: rename chrome-web-comments-* to usual short names
     overflow: auto;
     padding-right: 0.5em;
     padding-bottom: 1.8em;
+    touch-action: auto;
+    overscroll-behavior: contain;
 }
 
 .chrome-web-comments-item-wrap{
@@ -233,6 +243,8 @@ TODO: rename chrome-web-comments-* to usual short names
     resize: vertical;
     outline: none;
     border: solid 1px #ccc;
+    touch-action: auto;
+    overscroll-behavior: contain;
 }
 
 .cwc-answear-form-buttons{
@@ -580,7 +592,7 @@ img.pict {
 }
 
 #mobile-bottom-panel-button .circular-text text {
-    font-size: 1.2vh;
+    font-size: 1.8vh;
     fill: #333;
 }
 
