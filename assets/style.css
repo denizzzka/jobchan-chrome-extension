@@ -391,6 +391,7 @@ img.pict {
     border: solid 1px;
     border-radius: 5px;
  */
+    font-size: 1.0em;
 }
 
 #panel-size-control {
@@ -612,7 +613,7 @@ img.pict {
 .nav-link {
     display: inline-block;
     text-decoration: none;
-    font-size: 1.0em;
+    font-size: 1.2em;
     text-align: center;
 }
 
