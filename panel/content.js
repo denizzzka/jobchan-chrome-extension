@@ -723,14 +723,14 @@ const app = {
 			startX = e.touches[0].clientX;
 			startY = e.touches[0].clientY;
 			isResizing = false; // will set to true on move if threshold exceeded
-			$(document).on('touchmove', throttledResize);
-			$(document).on('touchend', app.endResize);
+			document.addEventListener('touchmove', throttledResize, { passive: false });
+			document.addEventListener('touchend', app.endResize, { passive: false });
 		} else {
 			isResizing = true;
 			startX = e.clientX;
 			startY = e.clientY;
-			$(document).on('mousemove', throttledResize);
-			$(document).on('mouseup', app.endResize);
+			document.addEventListener('mousemove', throttledResize);
+			document.addEventListener('mouseup', app.endResize);
 			startRatio = panelSizeRatio;
 
 			// Temporarily remove transitions for smoother resizing
@@ -747,6 +747,7 @@ const app = {
 		if (e.touches) {
 			clientX = e.touches[0].clientX;
 			clientY = e.touches[0].clientY;
+			e.preventDefault(); // prevent page scrolling on touch
 		} else {
 			clientX = e.clientX;
 			clientY = e.clientY;
@@ -765,7 +766,12 @@ const app = {
 					const panel = rfind('#chrome-web-comments-panel');
 					this.originalTransition = panel.css('transition');
 					panel.css('transition', 'none');
-					e.preventDefault(); // now prevent scrolling
+					// Prevent page scrolling during resize
+					this.originalBodyOverflow = $('body').css('overflow');
+					$('body').css('overflow', 'hidden');
+					// Prevent touch scrolling on the panel
+					this.originalTouchAction = panel.css('touch-action');
+					panel.css('touch-action', 'none');
 				} else {
 					return;
 				}
@@ -818,12 +824,20 @@ const app = {
 			// Restore transitions
 			const panel = rfind('#chrome-web-comments-panel');
 			panel.css('transition', this.originalTransition || '');
+			// Restore body overflow
+			if (this.originalBodyOverflow !== undefined) {
+				$('body').css('overflow', this.originalBodyOverflow);
+			}
+			// Restore touch-action
+			if (this.originalTouchAction !== undefined) {
+				panel.css('touch-action', this.originalTouchAction);
+			}
 		}
 
-		$(document).off('mousemove', throttledResize);
-		$(document).off('touchmove', throttledResize);
-		$(document).off('mouseup', app.endResize);
-		$(document).off('touchend', app.endResize);
+		document.removeEventListener('mousemove', throttledResize);
+		document.removeEventListener('touchmove', throttledResize);
+		document.removeEventListener('mouseup', app.endResize);
+		document.removeEventListener('touchend', app.endResize);
 	},
 
 	onWindowResize: () => {
