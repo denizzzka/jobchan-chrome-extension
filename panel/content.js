@@ -93,6 +93,7 @@ const app = {
 		$(root).on('input', '#panel-size-slider', app.panelSizeChange);
 		$(root).on('mousedown', '#panel-resize-handle', app.startResize);
 		$(root).on('mousedown', '#panel-resize-handle-center', app.startResize);
+		$(root).on('touchstart', '#touch-resizer', app.startResize);
 		$(root).on('click', '.cwc-answear-user', app.selectUserAnswear);
 		$(root).on('click', '#subscrBtn', app.subscribe);
 		$(root).on('click', '#unsubscrBtn', app.unsubscribe);
@@ -185,10 +186,6 @@ const app = {
 			rfind('#chrome-web-comments-panel-button').hide();
 		} else {
 			rfind('#mobile-bottom-panel-button').hide();
-		}
-
-		if ('ontouchstart' in window) {
-			rfind('#chrome-web-comments-panel').on('touchstart', app.startResize);
 		}
 
 		app.updateCounterButtonText(0);

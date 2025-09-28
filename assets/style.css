@@ -63,6 +63,11 @@ TODO: rename chrome-web-comments-* to usual short names
     flex-direction: column;
 }
 
+#touch-resizer {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 #chrome-web-comments-panel-button{
     position: fixed;
     top: 25%;

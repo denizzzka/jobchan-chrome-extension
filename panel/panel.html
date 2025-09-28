@@ -15,35 +15,37 @@
 
     <section id="chrome-web-comments-panel">
         <div id="panel-payload">
-            <div id="panel-resize-handle"></div>
-            <div id="panel-resize-handle-center"></div>
-            <section id = "panel-subscribe">
-                <button id="subscrBtn" disabled=true title="Нажмите если хотите получать уведомления о новых комментариях к этой вакансии">Подписаться</button>
-                <button id="unsubscrBtn" disabled=true title="Отписаться от уведомлений о новых комментариях к этой вакансии">Отписаться</button>
-                <nobr>
-                    <a href="/popup/subscriptions.html" class="nav-link relative-href" title="Список ваших подписок на комментарии">Подписки</a>
-                    <span id="haveUnread" title="Количество непрочитанных подписок">
-                        <b>
-                            (<span id="unreadNum">сбой скрипта</span>)
-                        </b>
-                    </span>
-                </nobr>
-                <a href="/popup/recent.html" class="nav-link relative-href">Комментарии к другим вакансиям</a>
-            </section>
-            <form id="chrome-web-comments-form">
-                <label class="name-label">
-                    <input name="name" id="cwc_user" placeholder="Любое имя или ник" required disabled />
-                </label>
-                <label>
-                    <textarea name="comment" placeholder="Ваш комментарий" required ></textarea>
-                </label>
-                <label style="display: flex; justify-content: space-between;">
-                    <button name="add">Отправить</button>
-                    <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
-                </label>
-            </form>
-            <button id="chrome-web-comments-panel-close">x</button>
-            <div id="cwc-error"></div>
+            <div id="touch-resizer">
+                <div id="panel-resize-handle"></div>
+                <div id="panel-resize-handle-center"></div>
+                <section id = "panel-subscribe">
+                    <button id="subscrBtn" disabled=true title="Нажмите если хотите получать уведомления о новых комментариях к этой вакансии">Подписаться</button>
+                    <button id="unsubscrBtn" disabled=true title="Отписаться от уведомлений о новых комментариях к этой вакансии">Отписаться</button>
+                    <nobr>
+                        <a href="/popup/subscriptions.html" class="nav-link relative-href" title="Список ваших подписок на комментарии">Подписки</a>
+                        <span id="haveUnread" title="Количество непрочитанных подписок">
+                            <b>
+                                (<span id="unreadNum">сбой скрипта</span>)
+                            </b>
+                        </span>
+                    </nobr>
+                    <a href="/popup/recent.html" class="nav-link relative-href">Комментарии к другим вакансиям</a>
+                </section>
+                <form id="chrome-web-comments-form">
+                    <label class="name-label">
+                        <input name="name" id="cwc_user" placeholder="Любое имя или ник" required disabled />
+                    </label>
+                    <label>
+                        <textarea name="comment" placeholder="Ваш комментарий" required ></textarea>
+                    </label>
+                    <label style="display: flex; justify-content: space-between;">
+                        <button name="add">Отправить</button>
+                        <a href="/assets/rules.html" id="rules-link" class="relative-href chrome-web-comments-item-footer">Правила</a>
+                    </label>
+                </form>
+                <button id="chrome-web-comments-panel-close">x</button>
+                <div id="cwc-error"></div>
+            </div>
             <div id="chrome-web-comments-lists"></div>
         </div>
     </section>
