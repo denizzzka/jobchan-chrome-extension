@@ -786,7 +786,7 @@ const app = {
 			panelSizeRatios[direction] = panelSizeRatio;
 			rfind('#panel-size-slider').val(panelSizeRatio);
 			rfind('#panel-size-value').text(panelSizeRatio);
-			if ((direction === 'top' || direction === 'bottom') && panelSizeRatio <= minPanelSizeRatio) {
+			if (panelSizeRatio <= minPanelSizeRatio) {
 				rfind('#chrome-web-comments-panel').removeClass('active');
 				savePanelState('closed');
 				chrome.storage.local.remove([key]);
