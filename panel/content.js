@@ -181,7 +181,7 @@ const app = {
 		const defaultDirection = window.isMobile ? 'bottom' : 'right';
 		rfind('#chrome-web-comments-panel').addClass('slide-' + defaultDirection);
 
-		if (defaultDirection === 'bottom') {
+		if (window.isMobile) {
 			rfind('#chrome-web-comments-panel-button').hide();
 		} else {
 			rfind('#mobile-bottom-panel-button').hide();
