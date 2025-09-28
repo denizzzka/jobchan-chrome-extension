@@ -716,6 +716,10 @@ const app = {
 	},
 
 	startResize: async function(e) {
+		// Prevent resize if touch starts inside the comments list
+		if ($(e.target).closest('#chrome-web-comments-lists').length) {
+			return;
+		}
 		isResizing = true;
 		if (e.touches) {
 			startX = e.touches[0].clientX;
