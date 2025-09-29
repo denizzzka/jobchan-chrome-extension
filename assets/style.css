@@ -389,7 +389,7 @@ img.pict {
 }
 
 @media (min-resolution: 2dppx) {
-    .nav {
+    .nav, .nav-link {
         font-size: 24pt;
     }
 }
@@ -632,13 +632,8 @@ img.pict {
 }
 
 .nav-link {
-    display: inline-block;
-    text-decoration: none;
     text-align: center;
-}
-
-.nav-link:hover {
-    text-decoration: underline;
+    font-size: 12pt;
 }
 
 .page-title {
