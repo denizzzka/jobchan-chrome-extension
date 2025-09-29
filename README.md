@@ -13,5 +13,6 @@
 * career.habr.com
 * hh.ru
 * rabota.ru
+* superjob.ru
 * zarplata.ru
 * rabota.by
