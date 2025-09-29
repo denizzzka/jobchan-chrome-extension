@@ -34,6 +34,7 @@
 			"https://*.hh.ru/vacancy/*",
 			"https://*.rabota.by/vacancy/*",
 			"https://*.rabota.ru/vacancy/*",
+			"https://*.superjob.ru/vakansii/*",
 			"https://*.zarplata.ru/vacancy/*"
 		 ],
 		"js": [
