@@ -60,8 +60,10 @@ function throttle(func, delay) {
 }
 
 function convertUrlsToLinks(text) {
-	const urlRegex = /\b([a-zA-Z][a-zA-Z+.-]{0,9}:\/\/[^/\s][^\s]*)/g;
-	return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+	// "<"" от <br> как разделитель отлавливается на лету потому что бэкенд в настоящее время переводы строк в HTML сам генерирует!
+	// TODO: Надо воткнуть библиотеку на стороное плагина которая бы преобразовывала текст в HTML, включая "рендеринг" ссылок и всё такое прочее
+	const urlRegex = /\b([a-zA-Z][a-zA-Z+.-]{0,9}:\/\/)([^/\s][^ \t\n\f\r\v<]*)/g;
+	return text.replace(urlRegex, '<a href="$1$2" target="_blank">$2</a>');
 }
 
 const app = {

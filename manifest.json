@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "JobChan: Обсуждение вакансий",
 	"description": "Обсуждение вакансий на сайтах поиска работы",
-	"version": "0.5.9",
+	"version": "0.5.11",
 	"homepage_url": "https://github.com/denizzzka/jobchan-chrome-extension/",
 	"icons": {
 		"128": "assets/icons/logo_128x128.png",
@@ -44,6 +44,7 @@
 			"https://*.hh.ru/vacancy/*",
 			"https://*.rabota.by/vacancy/*",
 			"https://*.rabota.ru/vacancy/*",
+			"https://*.superjob.ru/vakansii/*",
 			"https://*.zarplata.ru/vacancy/*"
 		 ],
 		"js": [
