@@ -188,7 +188,6 @@ TODO: rename chrome-web-comments-* to usual short names
 
 .cwc-my-comment-true{
     background: #e3fee0;
-    border-top-left-radius: 0;
 }
 
 .chrome-web-comments-item-user{
@@ -257,8 +256,7 @@ TODO: rename chrome-web-comments-* to usual short names
 .cwc-child-list{
     margin-left: 35px;
 }
-
-.cwc-child-list .chrome-web-comments-item:not(.cwc-my-comment-true){
+.cwc-child-list .chrome-web-comments-item{
     border-top-left-radius: 0;
 }
 
